@@ -2,37 +2,71 @@
 *.class
 *.war
 *.ear
-*HELP.md
-
-##Intellij
-.idea/
-.gigaide
-*.ipr
-*.iws
-*.iml
-*.log
-amplicode.xml
-
-nbactions.xml
-nb-configuration.xml
 
 ## Gradle
-/local.properties
 .gradle/
-gradle-app.setting
-/build/
-
-# NetBeans/OpenIDE
-nbproject/
 build/
+!gradle/wrapper/gradle-wrapper.jar
+
+## Maven
+target/
+
+## IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+# Amplicode
+amplicode.xml
+# Misc
+*.log
+*.tmp
+# Help etc.
+HELP.md
+
+## OpenIDE/NetBeans
+nbproject/
+nbproject/private/
 nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+nbactions.xml
+nb-configuration.xml
 
-# temp
-*.tmp
+## STS (Spring Tool Suite)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
 
-# Конфиги с секретами
+## VS Code
+.vscode/
+
+## OS/other
+.DS_Store
+Thumbs.db
+
+## Secrets/configs
 .env
+application.properties
 application.yml
+*.bat
+local.properties
+
+## Misc
+gigaide
+gradle-app.setting
+
+# Исключить только каталоги сборки src/main/**/build и src/test/**/build из игнорирования:
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+!**/src/main/**/out/
+!**/src/test/**/out/
