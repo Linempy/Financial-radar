@@ -1,0 +1,38 @@
+## Java
+*.class
+*.war
+*.ear
+*HELP.md
+
+##Intellij
+.idea/
+.gigaide
+*.ipr
+*.iws
+*.iml
+*.log
+amplicode.xml
+
+nbactions.xml
+nb-configuration.xml
+
+## Gradle
+/local.properties
+.gradle/
+gradle-app.setting
+/build/
+
+# NetBeans/OpenIDE
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# temp
+*.tmp
+
+# Конфиги с секретами
+.env
+application.yml
