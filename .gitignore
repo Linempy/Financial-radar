@@ -55,7 +55,8 @@ bin/
 Thumbs.db
 
 ## Secrets/configs
-.env
+#.env в рамках хакатона
+#.env.local
 application.properties
 application.yml
 local.properties
