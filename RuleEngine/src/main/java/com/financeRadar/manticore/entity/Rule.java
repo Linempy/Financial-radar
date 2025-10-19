@@ -1,7 +1,5 @@
 package com.financeRadar.manticore.entity;
 
-import io.lettuce.core.dynamic.annotation.CommandNaming;
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.kafka.annotation.EnableKafka;
 
 /**
  * Сущность представляющая собой правило

@@ -1,6 +1,8 @@
 package com.financeRadar.manticore.validator;
 
 import com.financeRadar.manticore.aop.ValidSpELExpression;
+import com.financeRadar.manticore.dto.RuleCreateDto;
+import com.financeRadar.manticore.dto.RuleUpdateDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.expression.Expression;
@@ -13,10 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * SpELExpressionValidator — описание класса.
- * <p>
- * TODO: добавить описание назначения и поведения класса.
- * </p>
+ * Валидатор для SpEL выражения
+ * Используется в {@link RuleCreateDto} и {@link RuleUpdateDto}
  *
  * @author Linempy
  * @since 19.10.2025

@@ -1,10 +1,8 @@
 package com.financeRadar.manticore.service;
 
 /**
- * RuleEngine — описание класса.
- * <p>
- * TODO: добавить описание назначения и поведения класса.
- * </p>
+ * Сервис представляющий движок правил
+ * TODO дописать
  *
  * @author Linempy
  * @since 19.10.2025

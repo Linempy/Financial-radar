@@ -4,13 +4,9 @@ import com.financeRadar.manticore.dto.RuleCreateDto;
 import com.financeRadar.manticore.dto.RuleUpdateDto;
 import com.financeRadar.manticore.dto.RuleViewDto;
 import com.financeRadar.manticore.entity.Rule;
-import jakarta.validation.Valid;
 
 /**
- * RuleService — описание класса.
- * <p>
- * TODO: добавить описание назначения и поведения класса.
- * </p>
+ * Интерфейс взаимодействия с сущностью {@link Rule}
  *
  * @author Linempy
  * @since 19.10.2025
