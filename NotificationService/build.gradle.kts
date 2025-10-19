@@ -1,19 +1,13 @@
 plugins {
-    id("java")
-}
-
-group = "com.financeRadar.manticore"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
+    id("org.springframework.boot")
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    /**
+     * Spring boot starters
+     */
+//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 }

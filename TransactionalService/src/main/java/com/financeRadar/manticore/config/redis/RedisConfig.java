@@ -16,10 +16,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * RedisConfig — описание класса.
- * <p>
- * TODO: добавить описание назначения и поведения класса.
- * </p>
+ * Конфигурационный класс для Redis
  *
  * @author Linempy
  * @since 18.10.2025
@@ -33,14 +30,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String redisHost;
 
-    @Value("${spring.data.redis.database}")
-    private int database;
-
-
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
-        config.setDatabase(database);
         return new JedisConnectionFactory(config);
     }
 

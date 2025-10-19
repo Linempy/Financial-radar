@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import java.util.Arrays;
  * @author Linempy
  * @since 18.10.2025
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class IdempotencyKeyFilter extends OncePerRequestFilter {
@@ -44,6 +46,7 @@ public class IdempotencyKeyFilter extends OncePerRequestFilter {
         }
 
         boolean isNewKey = transactionalRepository.addIfAbsent(idempotencyKey);
+        log.info("Ключ является новым: {}", isNewKey);
 
         if (!isNewKey) {
             response.setStatus(HttpStatus.OK.value());

@@ -2,10 +2,12 @@ package com.financeRadar.manticore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.kafka.annotation.EnableKafka;
 
+@EnableKafka
 @SpringBootApplication
-public class Main {
+public class RuleEngineApp {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(RuleEngineApp.class, args);
     }
 }

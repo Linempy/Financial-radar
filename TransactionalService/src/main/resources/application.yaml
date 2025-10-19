@@ -14,8 +14,8 @@ spring:
       hibernate:
         format_sql: true
 
-#  liquibase:
-#    change-log: classpath:db/changelog/db.changelog-master.yaml
+  liquibase:
+    enabled: false
 
   data:
     redis:
@@ -55,7 +55,7 @@ spring:
             reader: "true"
 
 server:
-  port: 8083
+  port: 8080
 
 logging:
   level:

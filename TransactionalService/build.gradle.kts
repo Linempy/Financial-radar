@@ -1,20 +1,9 @@
-import com.github.davidmc24.gradle.plugin.avro.AvroExtension
-
+// TransactionalService/build.gradle.kts
 plugins {
-    java
-    id("org.springframework.boot") version "3.0.6"
-    id("io.spring.dependency-management") version "1.1.0"
-    id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
+    id("org.springframework.boot")
+    id("com.github.davidmc24.gradle.plugin.avro")
 }
 
-group = "com.financeRadar.manticore"
-version = "1.0-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
-
-repositories {
-    mavenCentral()
-    maven(url = "https://packages.confluent.io/maven/")
-}
 
 dependencies {
     /**
@@ -78,7 +67,6 @@ dependencies {
      * Message Broker
      */
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.apache.avro:avro:1.11.1")
     implementation("io.confluent:kafka-avro-serializer:7.4.0")
     implementation("io.confluent:kafka-schema-registry-client:7.4.0")
@@ -90,14 +78,15 @@ tasks.test {
     useJUnitPlatform()
 }
 
-configure<AvroExtension> {
-    isCreateSetters.set(false)
-    fieldVisibility.set("PRIVATE")
-    outputCharacterEncoding.set("UTF-8")
+avro {
+    isCreateSetters = false
+    fieldVisibility = "PRIVATE"
+    outputCharacterEncoding = "UTF-8"
 }
 
-tasks.withType<com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask> {
+tasks.named<com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask>("generateAvroJava") {
     setSource(file("src/main/resources/avro"))
-    setOutputDir(layout.buildDirectory.file("generated-sources/avro").get().asFile)
+    setOutputDir(file("$buildDir/generated-sources/avro"))
 }
+
 

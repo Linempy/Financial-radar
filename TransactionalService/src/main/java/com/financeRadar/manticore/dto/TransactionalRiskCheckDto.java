@@ -38,8 +38,8 @@ public record TransactionalRiskCheckDto(
             throw new DataValidationException("Транзакция не может быть совершена в будущем");
         }
 
-        if (createdAt.isBefore(now.minusDays(2))) {
-            throw new DataValidationException("Транзакция является слишком старой (макс. 2 дня)");
+        if (createdAt.isBefore(now.minusDays(1))) {
+            throw new DataValidationException("Транзакция является слишком старой (макс. 1 день)");
         }
 
         if (senderId.equals(receiverId)) {
