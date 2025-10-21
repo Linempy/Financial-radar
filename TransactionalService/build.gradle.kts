@@ -6,6 +6,9 @@ plugins {
 
 
 dependencies {
+
+    implementation(project(":AuditService"))
+
     /**
      * Spring boot starters
      */

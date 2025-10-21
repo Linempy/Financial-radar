@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author Linempy
  * @since 18.10.2025
  */
-public record TransactionalRiskCheckDto(
+public record TransactionalCreateDto(
         @Positive(message = "Сумма транзакции должна быть положительна")
         @NotNull(message = "Сумма транзакции обязательное поле")
         BigDecimal amount,
@@ -31,7 +31,7 @@ public record TransactionalRiskCheckDto(
         @Nullable String description
 ) {
 
-    public TransactionalRiskCheckDto {
+    public TransactionalCreateDto {
         LocalDateTime now = LocalDateTime.now();
 
         if (createdAt.isAfter(now)) {

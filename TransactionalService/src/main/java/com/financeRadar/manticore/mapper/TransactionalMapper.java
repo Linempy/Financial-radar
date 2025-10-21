@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.mapper;
 
-import com.financeRadar.manticore.dto.TransactionalRiskCheckDto;
+import com.financeRadar.manticore.dto.TransactionalCreateDto;
 import com.financeRadar.manticore.dto.avro.TransactionalRiskCheckEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -16,7 +16,7 @@ import java.time.ZoneOffset;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TransactionalMapper {
 
-    default TransactionalRiskCheckEvent toEvent(TransactionalRiskCheckDto dto, String correlationId) {
+    default TransactionalRiskCheckEvent toEvent(TransactionalCreateDto dto, String correlationId) {
         return new TransactionalRiskCheckEvent(
                 String.valueOf(dto.amount()),
                 correlationId,

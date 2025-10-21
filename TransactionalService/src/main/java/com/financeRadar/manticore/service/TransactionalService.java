@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.service;
 
-import com.financeRadar.manticore.dto.TransactionalRiskCheckDto;
+import com.financeRadar.manticore.dto.TransactionalCreateDto;
 
 /**
  * Интерфейс для взаимодействия с транзакциями
@@ -10,5 +10,5 @@ import com.financeRadar.manticore.dto.TransactionalRiskCheckDto;
  */
 public interface TransactionalService {
 
-    void handleTransactionalOnFraud(TransactionalRiskCheckDto dto);
+    void createWithChechRisk(TransactionalCreateDto dto);
 }

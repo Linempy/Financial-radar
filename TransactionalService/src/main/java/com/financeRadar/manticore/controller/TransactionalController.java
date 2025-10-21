@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.controller;
 
-import com.financeRadar.manticore.dto.TransactionalRiskCheckDto;
+import com.financeRadar.manticore.dto.TransactionalCreateDto;
 import com.financeRadar.manticore.service.TransactionalServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class TransactionalController {
     private final TransactionalServiceImpl service;
 
     @PostMapping
-    public ResponseEntity<Void> checkTransactional(@RequestBody @Valid TransactionalRiskCheckDto dto) {
-        service.handleTransactionalOnFraud(dto);
+    public ResponseEntity<Void> createTransactionWithCheckRisk(@RequestBody @Valid TransactionalCreateDto dto) {
+        service.createWithChechRisk(dto);
         return ResponseEntity.ok().build();
     }
 }

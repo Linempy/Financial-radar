@@ -26,13 +26,13 @@ public class TransactionalCheckFraudProducer {
 
     private final KafkaTemplate<String, TransactionalRiskCheckEvent> kafkaTemplate;
 
-    public void sendMessage(TransactionalRiskCheckEvent event) {
+    public CompletableFuture<SendResult<String, TransactionalRiskCheckEvent>> sendMessage(TransactionalRiskCheckEvent event) {
         CompletableFuture<SendResult<String, TransactionalRiskCheckEvent>> future = kafkaTemplate.send(
                 topicForTransaction,
                 event
         );
 
-        future.whenComplete((success, failure) -> {
+        return future.whenComplete((success, failure) -> {
             if (failure == null) {
                 log.info("CorrelationId: {}. Ивент был успешно отправлен в топик: {}",
                         event.getCorrelationId(),
@@ -45,6 +45,5 @@ public class TransactionalCheckFraudProducer {
                 );
             }
         });
-
     }
 }
