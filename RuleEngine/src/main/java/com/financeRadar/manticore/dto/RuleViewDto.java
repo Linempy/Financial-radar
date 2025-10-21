@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author Linempy
- * @since 21.10.2025
+ * @since 19.10.2025
  */
 public record RuleViewDto(
         String name,

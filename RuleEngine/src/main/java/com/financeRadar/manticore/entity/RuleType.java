@@ -1,11 +1,11 @@
 package com.financeRadar.manticore.entity;
+
 /**
- * RuleType — перечисление.
- * <p>
- * TODO: описать назначение enum и значения.
- * </p>
+ * Перечисления представляющее собой типы правил для проверки на подозрительность транзакции
+ * Используется в {@link Rule}
+ *
  * @author Linempy
- * @since 21.10.2025
+ * @since 19.10.2025
  */
 public enum RuleType {
     THRESHOLD, PATTERN, COMPOSITE, ML

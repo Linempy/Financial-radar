@@ -34,19 +34,3 @@ public class TransactionalCheckFraudConsumer {
         // вызов ruleEngien там будте происходить тоже audit шагов по правилам
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
