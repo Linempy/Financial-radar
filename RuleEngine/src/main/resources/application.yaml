@@ -29,7 +29,10 @@ spring:
     bootstrap-servers: localhost:9092
     topics:
       transactions:
-        check: check_transaction
+        check:
+          name: check_transaction
+          partitions: 1
+          replicas: 1check_transaction
     consumer:
       enable-auto-commit: true
       group-id: "post-service-group"

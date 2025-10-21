@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TransactionalCheckFraudConsumer {
 
-    @KafkaListener(topics = "${spring.kafka.topics.transactions.check}")
+    @KafkaListener(topics = "${spring.kafka.topics.transactions.check.name}")
     public void processSendEvent(ConsumerRecord<String, TransactionalRiskCheckEvent> consumerRecord) {
         TransactionalRiskCheckEvent event = consumerRecord.value();
         log.info("CorrelationId: {}. Ивент был получен слушателем", event.getCorrelationId());

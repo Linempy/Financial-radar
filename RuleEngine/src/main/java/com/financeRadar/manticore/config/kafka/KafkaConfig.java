@@ -17,11 +17,17 @@ import org.springframework.kafka.config.TopicBuilder;
 @EnableKafka
 public class KafkaConfig {
 
+    @Value("${spring.kafka.topics.transactions.check.partitions}")
+    private int partitionCount;
+
+    @Value("${spring.kafka.topics.transactions.check.replicas}")
+    private int replicasCount;
+
     @Bean
-    public NewTopic checkTransactional(@Value("${spring.kafka.topics.transactions.check}") String topic) {
+    public NewTopic checkTransactional(@Value("${spring.kafka.topics.transactions.check.name}") String topic) {
         return TopicBuilder.name(topic)
-                .partitions(1)
-                .replicas(1)
+                .partitions(partitionCount)
+                .replicas(replicasCount)
                 .build();
     }
 }
