@@ -37,6 +37,8 @@ spring:
           name: check_transaction
           partitions: 1
           replicas: 1
+      rules:
+        reload: rules_reload
     consumer:
       enable-auto-commit: true
       group-id: "post-service-group"
@@ -57,6 +59,12 @@ server:
 logging:
   level:
     root: info
+
+
+scheduling:
+  redis:
+    rules:
+      reload: 0 */15 * * * *
 
 retry:
   config:

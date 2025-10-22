@@ -30,4 +30,12 @@ public class KafkaConfig {
                 .replicas(replicasCount)
                 .build();
     }
+
+    @Bean
+    public NewTopic ruleReload(@Value("${spring.kafka.topics.rules.reload.name}") String topic) {
+        return TopicBuilder.name(topic)
+                .partitions(partitionCount)
+                .replicas(replicasCount)
+                .build();
+    }
 }

@@ -24,7 +24,7 @@ public class TransactionalCheckFraudConsumer {
     private final AuditService auditService;
 
     @KafkaListener(topics = "${spring.kafka.topics.transactions.check.name}")
-    public void processSendEvent(ConsumerRecord<String, TransactionalRiskCheckEvent> consumerRecord) {
+    public void processReceiveEvent(ConsumerRecord<String, TransactionalRiskCheckEvent> consumerRecord) {
         TransactionalRiskCheckEvent event = consumerRecord.value();
         log.info("CorrelationId: {}. Ивент был получен слушателем", event.getCorrelationId());
 

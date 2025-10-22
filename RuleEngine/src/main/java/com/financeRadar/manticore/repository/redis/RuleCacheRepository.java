@@ -2,13 +2,18 @@ package com.financeRadar.manticore.repository.redis;
 
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * RuleCacheRepository — описание класса.
@@ -19,6 +24,7 @@ import java.util.List;
  * @author Linempy
  * @since 21.10.2025
  */
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class RuleCacheRepository {
@@ -40,8 +46,36 @@ public class RuleCacheRepository {
         });
     }
 
+    public List<RuleRedisDto> findAllRules() {
+        try {
+            Set<String> keys = redisTemplate.keys(RULE_KEY + "*");
+            if (keys == null || keys.isEmpty()) {
+                return getEmptyList();
+            }
+
+            List<Object> rules = redisTemplate.opsForValue().multiGet(keys);
+
+            if (rules == null) {
+                return getEmptyList();
+            }
+
+            return rules.stream()
+                    .filter(Objects::nonNull)
+                    .map(obj -> (RuleRedisDto) obj)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("Ошибка получения правил из Redis", e);
+            return getEmptyList();
+        }
+    }
+
     private String getFormattedKey(Long id) {
         return RULE_KEY + id;
+    }
+
+    private List<RuleRedisDto> getEmptyList() {
+        return Collections.emptyList();
     }
 
 }

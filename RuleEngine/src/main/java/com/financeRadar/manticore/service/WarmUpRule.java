@@ -46,8 +46,5 @@ public class WarmUpRule {
         } catch (Exception e) {
             log.error("Ошибка при разогреве кэша правил", e);
         }
-
     }
-
-
 }
