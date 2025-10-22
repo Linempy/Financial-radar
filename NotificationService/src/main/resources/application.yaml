@@ -1,3 +1,43 @@
-
 server:
   port: 8081
+
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: Kir32kir@mail.ru
+    password: YtVxbHxoLuMYUtKIezjz
+    protocol: smtps
+    from: Kir32kir@mail.ru
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.mail.ru
+          starttls:
+            enable: false
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    topics:
+      notification:
+        name: send_notification
+        partition-count: 1
+        replica-count: 1
+      dlq:
+        name: dlq
+        partition-count: 1
+        replica-count: 1
+
+    consumer:
+      group-id: "notification-group"
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      listener:
+        missing-topics-fatal: false
