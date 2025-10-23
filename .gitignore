@@ -15,9 +15,11 @@ build/
 target/
 
 ## IntelliJ IDEA
-.idea/
+.idea/libraries
+.idea/*.xml
 *.ipr
 *.iws
+*.iml
 out/
 # Amplicode
 amplicode.xml
