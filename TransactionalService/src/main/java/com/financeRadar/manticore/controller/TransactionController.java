@@ -1,10 +1,11 @@
 package com.financeRadar.manticore.controller;
 
-import com.financeRadar.manticore.dto.TransactionalCreateDto;
-import com.financeRadar.manticore.service.TransactionalServiceImpl;
+import com.financeRadar.manticore.dto.RequestContext;
+import com.financeRadar.manticore.dto.TransactionCreateDto;
+import com.financeRadar.manticore.service.TransactionServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,17 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Linempy
  * @since 18.10.2025
  */
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/transactional")
-public class TransactionalController {
+public class TransactionController {
 
-    private final TransactionalServiceImpl service;
+    private final TransactionServiceImpl service;
 
     @PostMapping
-    public ResponseEntity<Void> createTransactionWithCheckRisk(@RequestBody @Valid TransactionalCreateDto dto) {
-        service.createWithChechRisk(dto);
+    public ResponseEntity<Void> createTransactionWithCheckRisk(
+            @RequestBody @Valid TransactionCreateDto dto,
+            HttpServletRequest request) {
+        RequestContext context = new RequestContext(request.getRemoteAddr(), request.getHeader("User-Agent"));
+        service.createWithChechRisk(dto, context);
         return ResponseEntity.ok().build();
     }
 }

@@ -20,7 +20,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,5 +66,5 @@ public class ProcessingAuditEntity {
     private LocalDateTime startTime;
 
     @OneToMany(mappedBy = "audit", cascade = CascadeType.ALL)
-    private List<ProcessingStepEntity> steps = new ArrayList<>();
+    private List<ProcessingStepEntity> steps;
 }

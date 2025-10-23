@@ -2,8 +2,6 @@ package com.financeRadar.manticore.dto.redis;
 
 import com.financeRadar.manticore.entity.RuleType;
 
-import java.time.LocalDateTime;
-
 /**
  * RuleRedisDto — описание класса.
  * <p>
@@ -14,10 +12,11 @@ import java.time.LocalDateTime;
  * @since 21.10.2025
  */
 public record RuleRedisDto(
-        Long id,
-        RuleType ruleType,
-        String expression,
-        Integer priority,
-        LocalDateTime updatedAt
+    Long id,
+    String name,
+    RuleType ruleType,
+    String expression,
+    Integer priority,
+    Long version
 ) {
 }

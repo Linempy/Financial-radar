@@ -1,9 +1,10 @@
 {
   "type": "record",
-  "name": "TransactionalRiskCheckEvent",
+  "name": "TransactionRiskCheckEvent",
   "namespace": "com.financeRadar.manticore.dto.avro",
   "fields": [
     {"name": "amount", "type": "string"},
+    {"name": "transactionId", "type": "string"},
     {"name": "correlationId", "type": "string"},
     {"name": "createdAt", "type": {"type": "long", "logicalType": "timestamp-millis"}}
   ]

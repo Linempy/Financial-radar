@@ -1,5 +1,6 @@
 package com.financeRadar.manticore.repository.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class RuleCacheRepository {
     private int ttlDay;
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     private static final String RULE_KEY = "rule:";
 
@@ -50,23 +52,24 @@ public class RuleCacheRepository {
         try {
             Set<String> keys = redisTemplate.keys(RULE_KEY + "*");
             if (keys == null || keys.isEmpty()) {
-                return getEmptyList();
+                return Collections.emptyList();
             }
 
-            List<Object> rules = redisTemplate.opsForValue().multiGet(keys);
+            List<Object> results = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+                for (String key : keys) {
+                    connection.get(Objects.requireNonNull(redisTemplate.getStringSerializer().serialize(key)));
+                }
+                return null;
+            });
 
-            if (rules == null) {
-                return getEmptyList();
-            }
-
-            return rules.stream()
+            return results.stream()
                     .filter(Objects::nonNull)
-                    .map(obj -> (RuleRedisDto) obj)
+                    .map(obj -> objectMapper.convertValue(obj, RuleRedisDto.class))
                     .collect(Collectors.toList());
 
         } catch (Exception e) {
             log.error("Ошибка получения правил из Redis", e);
-            return getEmptyList();
+            return Collections.emptyList();
         }
     }
 

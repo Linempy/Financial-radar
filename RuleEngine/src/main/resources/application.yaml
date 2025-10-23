@@ -38,7 +38,10 @@ spring:
           partitions: 1
           replicas: 1
       rules:
-        reload: rules_reload
+        reload:
+          name: rules_reload
+          partitions: 1
+          replicas: 1
     consumer:
       enable-auto-commit: true
       group-id: "post-service-group"
@@ -61,6 +64,9 @@ logging:
     root: info
 
 
+risk:
+  threshold: 2
+
 scheduling:
   redis:
     rules:
@@ -74,3 +80,9 @@ retry:
     delay: 1000
     max-interval-ms: 10_000
 
+thread-pool:
+  async:
+    rule:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000

@@ -1,9 +1,8 @@
 package com.financeRadar.manticore.consumer;
 
-import com.financeRadar.manticore.context.ProcessingContext;
-import com.financeRadar.manticore.dto.avro.TransactionalRiskCheckEvent;
-import com.financeRadar.manticore.entity.ProcessingStatus;
-import com.financeRadar.manticore.service.AuditService;
+import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
+import com.financeRadar.manticore.service.engine.RuleEngineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -21,16 +20,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TransactionalCheckFraudConsumer {
 
-    private final AuditService auditService;
+    private final RuleEngineService service;
 
     @KafkaListener(topics = "${spring.kafka.topics.transactions.check.name}")
-    public void processReceiveEvent(ConsumerRecord<String, TransactionalRiskCheckEvent> consumerRecord) {
-        TransactionalRiskCheckEvent event = consumerRecord.value();
+    public void processReceiveEvent(ConsumerRecord<String, TransactionRiskCheckEvent> consumerRecord) {
+        TransactionRiskCheckEvent event = consumerRecord.value();
         log.info("CorrelationId: {}. Ивент был получен слушателем", event.getCorrelationId());
 
-        ProcessingContext context = new ProcessingContext(event.getCorrelationId());
-        context.addStep("KAFKA_RECEIVED", ProcessingStatus.COMPLETED, "Ивент был получен");
-
-        // вызов ruleEngien там будте происходить тоже audit шагов по правилам
+        //TODO>>> ЛОГИИИ
+        TransactionRiskResult result = service.checkTransaction(event);
+        //TODO>>> ЛОГИИ
+        log.info("RESULT. correlationId: {}, is_fraud: {}", event.getCorrelationId(), result.riskDecision().isFraud());
+        //TODO поменять статус транзакции (см статусы)
     }
 }

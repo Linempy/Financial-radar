@@ -5,6 +5,7 @@ import com.financeRadar.manticore.entity.Rule;
 import com.financeRadar.manticore.mapper.RuleMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
+import com.financeRadar.manticore.service.engine.RuleManager;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +27,14 @@ public class WarmUpRule {
     private final RuleRepository ruleRepository;
     private final RuleCacheRepository ruleCacheRepository;
     private final RuleMapper mapper;
+    private final RuleManager ruleManager;
 
     @PostConstruct
     private void warmUpCache() {
         long startTime = System.currentTimeMillis();
 
         try {
-            List<Rule> enabledRules = ruleRepository.findAllWithEnabled();
+            List<Rule> enabledRules = ruleRepository.findAllByEnabledTrue();
             if (enabledRules.isEmpty()) {
                 log.warn("Не найдено активных правил для загрузки в кэш");
                 return;

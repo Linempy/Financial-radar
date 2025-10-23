@@ -1,10 +1,14 @@
 package com.financeRadar.manticore.service.engine;
 
-import com.financeRadar.manticore.dto.avro.TransactionalRiskCheckEvent;
-import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
+import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
+import com.financeRadar.manticore.entity.RiskDecision;
+import com.financeRadar.manticore.entity.RuleResult;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
+import com.financeRadar.manticore.service.policy.RiskPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -16,18 +20,32 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class RuleEngineServiceImpl {
+public class RuleEngineServiceImpl implements RuleEngineService{
 
-    private final PolicyFraudTransactional policyFraud;
-    private final RuleCacheRepository cacheRepository;
+    private final RiskPolicy riskPolicy;
+    private final RuleManager ruleManager;
 
-    public void checkTransaction(TransactionalRiskCheckEvent event) {
-        // берем правила
-        List<SpELRule> rules = cacheRepository.findAllRules();
+    public TransactionRiskResult checkTransaction(TransactionRiskCheckEvent event) {
+        long startTime = System.currentTimeMillis();
+        List<ExecutableRule> rules = ruleManager.getRules();
+
+        //TODO>>> логиии
+        List<RuleResult> ruleResults = ruleManager.getRules().stream()
+                .map(rule -> rule.evaluate(event))
+                .toList();
+
+        RiskDecision riskDecision = riskPolicy.evaluate(ruleResults);
+
+        long processingTime = System.currentTimeMillis() - startTime;
+
+        return TransactionRiskResult.builder()
+                .transactionId(event.getTransactionId())
+                .correlationId(event.getCorrelationId())
+                .riskDecision(riskDecision)
+                .ruleResults(ruleResults)
+                .processingTimeMs(processingTime)
+                .evaluatedAt(Instant.now())
+                .build();
 
     }
-
-
-    private List<SpELRule>
-
 }
