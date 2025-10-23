@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+    <h2>ALERT: подозрительная транзакция!</h2>
+    <p>Отправитель: <b th:text="${message.senderId}"></b></p>
+    <p>Получатель: <b th:text="${message.receiverId}"></b></p>
+    <p>Сумма: <b th:text="${message.amount}"></b></p>
+    <p>Причины: <b th:text="${message.reasons}"></b></p>
+    <p>correlationId: <b th:text="${message.correlationId}"></b></p>
+</body>
+</html>
