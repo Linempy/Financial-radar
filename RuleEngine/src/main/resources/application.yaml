@@ -15,7 +15,8 @@ spring:
         format_sql: true
 
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   data:
     redis:
@@ -24,6 +25,9 @@ spring:
       channels:
         calculations_channel:
           name: calculations_channel
+      schema:
+        rule:
+          ttl-days: 1
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -32,7 +36,12 @@ spring:
         check:
           name: check_transaction
           partitions: 1
-          replicas: 1check_transaction
+          replicas: 1
+      rules:
+        reload:
+          name: rules_reload
+          partitions: 1
+          replicas: 1
     consumer:
       enable-auto-commit: true
       group-id: "post-service-group"
@@ -54,6 +63,15 @@ logging:
   level:
     root: info
 
+
+risk:
+  threshold: 2
+
+scheduling:
+  redis:
+    rules:
+      reload: 0 */15 * * * *
+
 retry:
   config:
     max-attempts: 3
@@ -62,3 +80,9 @@ retry:
     delay: 1000
     max-interval-ms: 10_000
 
+thread-pool:
+  async:
+    rule:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000

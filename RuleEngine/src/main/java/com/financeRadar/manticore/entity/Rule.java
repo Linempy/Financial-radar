@@ -8,8 +8,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Version;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 /**
  * Сущность представляющая собой правило
@@ -21,6 +29,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "rules")
+@NoArgsConstructor
 public class Rule {
 
     @Id
@@ -45,5 +54,19 @@ public class Rule {
 
     @Column(name = "expression", columnDefinition = "TEXT", nullable = false)
     private String expression;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
 }

@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.config.headerFilter;
 
-import com.financeRadar.manticore.repository.redis.TransactionalRedisRepository;
+import com.financeRadar.manticore.repository.redis.TransactionRedisRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class IdempotencyKeyFilter extends OncePerRequestFilter {
 
-    private final TransactionalRedisRepository transactionalRepository;
+    private final TransactionRedisRepository transactionalRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

@@ -1,5 +1,7 @@
 package com.financeRadar.manticore.dto;
 
+import java.time.LocalDateTime;
+
 /**
  * RuleViewDto — описание класса.
  * <p>
@@ -9,5 +11,13 @@ package com.financeRadar.manticore.dto;
  * @author Linempy
  * @since 19.10.2025
  */
-public class RuleViewDto {
+public record RuleViewDto(
+        String name,
+        String description,
+        Boolean enabled,
+        String expression,
+        Integer priority,
+        Long version,
+        LocalDateTime updatedAt
+) {
 }

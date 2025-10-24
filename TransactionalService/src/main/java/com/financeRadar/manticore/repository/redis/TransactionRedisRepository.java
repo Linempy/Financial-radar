@@ -18,7 +18,7 @@ import java.time.Duration;
  */
 @Repository
 @RequiredArgsConstructor
-public class TransactionalRedisRepository {
+public class TransactionRedisRepository {
 
     @Value("${spring.data.redis.schema.idempotency-key.ttl-min}")
     private int ttlMin;

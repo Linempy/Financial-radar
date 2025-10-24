@@ -16,22 +16,31 @@ import java.time.LocalDateTime;
  * @author Linempy
  * @since 18.10.2025
  */
-public record TransactionalRiskCheckDto(
+public record TransactionCreateDto(
         @Positive(message = "Сумма транзакции должна быть положительна")
         @NotNull(message = "Сумма транзакции обязательное поле")
         BigDecimal amount,
+
+        @NotNull(message = "Валюта обязательное поле")
+        @Size(min = 3, max = 3, message = "Валюта должна быть в формате ISO 4217 (3 символа)")
+        String currency,
+
         @NotNull(message = "ID отправителя обязательное поле")
         Long senderId,
+
         @NotNull(message = "ID получателя обязательное поле")
         Long receiverId,
+
         @NotNull(message = "Дата транзакции обязательное поле")
         @PastOrPresent(message = "Дата транзакции не может быть совершена в будущем")
         LocalDateTime createdAt,
+
         @Size(max = 512, message = "Длина не может превышать 512 символов")
-        @Nullable String description
+        @Nullable
+        String description
 ) {
 
-    public TransactionalRiskCheckDto {
+    public TransactionCreateDto {
         LocalDateTime now = LocalDateTime.now();
 
         if (createdAt.isAfter(now)) {

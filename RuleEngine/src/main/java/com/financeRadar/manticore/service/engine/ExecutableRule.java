@@ -1,6 +1,8 @@
-package com.financeRadar.manticore.service;
+package com.financeRadar.manticore.service.engine;
 
+import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.RuleResult;
+import com.financeRadar.manticore.entity.RuleType;
 
 /**
  * ExecutableRule — описание интерфейса.
@@ -12,6 +14,8 @@ import com.financeRadar.manticore.entity.RuleResult;
  * @since 19.10.2025
  */
 public interface ExecutableRule {
-
-    RuleResult evaluate();
+    Long getId();
+    RuleType getType();
+    Integer getPriority();
+    RuleResult evaluate(TransactionRiskCheckEvent tx);
 }

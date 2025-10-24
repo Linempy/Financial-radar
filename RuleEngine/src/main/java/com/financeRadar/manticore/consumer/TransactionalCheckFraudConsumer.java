@@ -1,6 +1,8 @@
 package com.financeRadar.manticore.consumer;
 
-import com.financeRadar.manticore.dto.avro.TransactionalRiskCheckEvent;
+import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
+import com.financeRadar.manticore.service.engine.RuleEngineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,9 +20,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TransactionalCheckFraudConsumer {
 
+    private final RuleEngineService service;
+
     @KafkaListener(topics = "${spring.kafka.topics.transactions.check.name}")
-    public void processSendEvent(ConsumerRecord<String, TransactionalRiskCheckEvent> consumerRecord) {
-        TransactionalRiskCheckEvent event = consumerRecord.value();
+    public void processReceiveEvent(ConsumerRecord<String, TransactionRiskCheckEvent> consumerRecord) {
+        TransactionRiskCheckEvent event = consumerRecord.value();
         log.info("CorrelationId: {}. Ивент был получен слушателем", event.getCorrelationId());
+
+        //TODO>>> ЛОГИИИ
+        TransactionRiskResult result = service.checkTransaction(event);
+        //TODO>>> ЛОГИИ
+        log.info("RESULT. correlationId: {}, is_fraud: {}", event.getCorrelationId(), result.riskDecision().isFraud());
+        //TODO поменять статус транзакции (см статусы)
     }
 }

@@ -1,1 +1,7 @@
 databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/V001_create_rules_table.sql
+  - include:
+      file: db/changelog/changeset/V002_insert_initial_rules.sql
+  - include:
+      file: db/changelog/changeset/V003_alter_table_rules.sql

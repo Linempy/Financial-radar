@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.producer;
 
-import com.financeRadar.manticore.dto.avro.TransactionalRiskCheckEvent;
+import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,19 +19,20 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TransactionalCheckFraudProducer {
+public class TransactionCheckFraudProducer {
 
-    @Value("${spring.kafka.topics.transactions.check}")
+    @Value("${spring.kafka.topics.transactions.check.name}")
     private String topicForTransaction;
 
-    private final KafkaTemplate<String, TransactionalRiskCheckEvent> kafkaTemplate;
+    private final KafkaTemplate<String, TransactionRiskCheckEvent> kafkaTemplate;
 
-    public void sendMessage(TransactionalRiskCheckEvent event) {
-        CompletableFuture<SendResult<String, TransactionalRiskCheckEvent>> future = kafkaTemplate.send(
+    public void sendMessage(TransactionRiskCheckEvent event) {
+        CompletableFuture<SendResult<String, TransactionRiskCheckEvent>> future = kafkaTemplate.send(
                 topicForTransaction,
                 event
         );
 
+        // TODO>> ЛОГИ
         future.whenComplete((success, failure) -> {
             if (failure == null) {
                 log.info("CorrelationId: {}. Ивент был успешно отправлен в топик: {}",
@@ -45,6 +46,5 @@ public class TransactionalCheckFraudProducer {
                 );
             }
         });
-
     }
 }
