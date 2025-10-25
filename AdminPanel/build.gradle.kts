@@ -7,12 +7,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     /**
      * Lombok
      */
     implementation("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
+
+    /**
+     * PostgreSQL
+     */
+    runtimeOnly("org.postgresql:postgresql")
 
     /**
      * Логирование
@@ -45,4 +52,14 @@ dependencies {
      */
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+
+    /**
+     * TransactionalService
+     */
+    implementation(project(":TransactionalService"))
+
+    /**
+     * RuleEngine
+     */
+    implementation(project(":RuleEngine"))
 }
