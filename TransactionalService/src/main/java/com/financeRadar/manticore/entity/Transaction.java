@@ -39,9 +39,6 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "correlation_id", unique = true, nullable = false)
-    private String correlationId;
-
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 

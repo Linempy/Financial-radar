@@ -1,5 +1,6 @@
 package com.financeRadar.manticore.service.engine;
 
+import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.RiskDecision;
 import com.financeRadar.manticore.entity.RuleResult;
@@ -25,9 +26,8 @@ public class RuleEngineServiceImpl implements RuleEngineService{
     private final RiskPolicy riskPolicy;
     private final RuleManager ruleManager;
 
-    public TransactionRiskResult checkTransaction(TransactionRiskCheckEvent event) {
+    public TransactionRiskResult checkTransaction(TransactionalEventWrapper event) {
         long startTime = System.currentTimeMillis();
-        List<ExecutableRule> rules = ruleManager.getRules();
 
         //TODO>>> логиии
         List<RuleResult> ruleResults = ruleManager.getRules().stream()
@@ -39,7 +39,7 @@ public class RuleEngineServiceImpl implements RuleEngineService{
         long processingTime = System.currentTimeMillis() - startTime;
 
         return TransactionRiskResult.builder()
-                .transactionId(event.getTransactionId())
+                .transactionId(event.getTransactionalId())
                 .correlationId(event.getCorrelationId())
                 .riskDecision(riskDecision)
                 .ruleResults(ruleResults)

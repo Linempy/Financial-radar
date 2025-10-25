@@ -19,7 +19,6 @@ import java.time.ZoneOffset;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TransactionMapper {
 
-    @Mapping(target = "correlationId", source = "correlationId")
     @Mapping(target = "amount", source = "dto.amount")
     @Mapping(target = "currency", source = "dto.currency")
     @Mapping(target = "senderId", source = "dto.senderId")
@@ -28,7 +27,7 @@ public interface TransactionMapper {
     @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "userAgent", source = "context.userAgent")
     @Mapping(target = "ipAddress", source = "context.ip")
-    Transaction toEntity(TransactionCreateDto dto, RequestContext context, String correlationId);
+    Transaction toEntity(TransactionCreateDto dto, RequestContext context);
 
     default Transaction enrichWithRequestData(Transaction transaction, RequestContext context) {
         transaction.setIpAddress(context.ip());
@@ -40,6 +39,7 @@ public interface TransactionMapper {
     default TransactionRiskCheckEvent toEvent(TransactionCreateDto dto, String transactionId, String correlationId) {
         return new TransactionRiskCheckEvent(
                 String.valueOf(dto.amount()),
+                dto.senderId().toString(),
                 transactionId,
                 correlationId,
                 dto.createdAt().atZone(ZoneOffset.UTC).toInstant()

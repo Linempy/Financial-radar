@@ -1,11 +1,10 @@
 package com.financeRadar.manticore.service.engine;
 
 
-import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
+import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
 import com.financeRadar.manticore.entity.RuleResult;
 import com.financeRadar.manticore.entity.RuleType;
-import com.financeRadar.manticore.utils.TimeUtils;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +13,6 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.function.Function;
 
 /**
  * SpELRule — описание класса.
@@ -35,44 +31,50 @@ public class SpELRule implements ExecutableRule {
 
     private final RuleRedisDto rule;
     private Expression compiledExpression;
-    private StandardEvaluationContext evaluationContext;
+
 
     @PostConstruct
     public void init() {
-        this.compiledExpression = new SpelExpressionParser()
-                .parseExpression(rule.expression());
-        this.evaluationContext = createEvaluationContext();
-        log.debug("Инициализация правила: {} - {}", rule.id(), rule.name());
-    }
-    
-    private StandardEvaluationContext createEvaluationContext() {
-        StandardEvaluationContext context = new StandardEvaluationContext();
-        context.setVariable("isNight", (Function<LocalDateTime, Boolean>) TimeUtils::isNight);
-        context.setVariable("isWeekend", (Function<LocalDateTime, Boolean>) TimeUtils::isWeekend);
-        return context;
+        try {
+            this.compiledExpression = new SpelExpressionParser()
+                    .parseExpression(rule.expression());
+            log.debug("Инициализация правила: {} - {}", rule.id(), rule.name());
+        } catch (Exception e) {
+            log.error("Ошибка парсинга выражения правила {}: '{}'", rule.id(), rule.expression(), e);
+            throw new RuntimeException("Invalid rule expression", e);
+        }
     }
 
     @Override
-    public RuleResult evaluate(TransactionRiskCheckEvent transaction) {
+    public RuleResult evaluate(TransactionalEventWrapper event) {
         //TODO ЛОГИИИ
-        log.info("rule@{}. name: {}; priority: {}, rule type: {}",
-                rule.version(), rule.name(), rule.priority(), rule.ruleType()
-        );
         long startTime = System.currentTimeMillis();
+
         try {
-            evaluationContext.setVariable("tx", transaction);
+            StandardEvaluationContext evaluationContext = new StandardEvaluationContext(event);
+
             Boolean result = compiledExpression.getValue(evaluationContext, Boolean.class);
             boolean triggered = Boolean.TRUE.equals(result);
 
+            long durationMs = System.currentTimeMillis() - startTime;
+            //TODO ЛОГИИИ
+            log.info("rule@{}. name: {}; priority: {}, rule type: {}, durationMs: {}",
+                    rule.version(), rule.name(), rule.priority(), rule.ruleType(), durationMs
+            );
             return RuleResult.builder()
                     .ruleId(rule.id().toString())
+                    .ruleName(rule.name())
                     .triggered(triggered)
-                    .executionTimeMs(System.currentTimeMillis() - startTime)
+                    .executionTimeMs(durationMs)
                     .build();
         } catch (Exception e) {
+            //TODO логии
+            log.warn("Ошибка выполнения правила {} '{}': {}",
+                    rule.id(), rule.expression(), e.getMessage());
             return RuleResult.builder()
                     .ruleId(rule.id().toString())
                     .triggered(false)
+                    .ruleName(rule.name())
                     .errorMessage(e.getMessage())
                     .executionTimeMs(System.currentTimeMillis() - startTime)
                     .build();

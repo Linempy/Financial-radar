@@ -21,5 +21,5 @@ public interface RuleService {
 
     RuleViewDto update(Long id, RuleUpdateDto dto);
 
-    List<RuleRedisDto> getFromRedisOrDb();
+    void delete(Long id);
 }

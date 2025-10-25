@@ -18,6 +18,22 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @Configuration
 public class AsyncConfig {
+
+    @Bean("afterCommitExecutor")
+    public ThreadPoolTaskExecutor afterCommitExecutor(
+            @Value("${thread-pool.async.commit.core-pool-size}") int corePoolSize,
+            @Value("${thread-pool.async.commit.max-pool-size}") int maxPoolSize,
+            @Value("${thread-pool.async.commit.queue-capacity}") int queueCapacity) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setQueueCapacity(queueCapacity);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setCorePoolSize(corePoolSize);
+
+        executor.setThreadNamePrefix("After-Commit-Async-");
+        executor.initialize();
+        return executor;
+    }
+
     @Bean("RuleExecutor")
     public ThreadPoolTaskExecutor postgresTaskExecutor(
             @Value("${thread-pool.async.rule.core-pool-size}") int corePoolSize,

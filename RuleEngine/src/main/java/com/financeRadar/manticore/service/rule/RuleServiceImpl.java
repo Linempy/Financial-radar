@@ -8,6 +8,8 @@ import com.financeRadar.manticore.entity.Rule;
 import com.financeRadar.manticore.mapper.RuleMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
+import com.financeRadar.manticore.service.refresh.RuleRefreshService;
+import com.financeRadar.manticore.utils.AfterCommitManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,8 @@ import java.util.List;
 public class RuleServiceImpl implements RuleService {
 
     private final RuleRepository ruleRepository;
-    private final RuleCacheRepository ruleCacheRepository;
+    private final RuleRefreshService refreshService;
+    private final AfterCommitManager afterCommitManager;
     private final RuleMapper mapper;
 
     @Override
@@ -36,6 +39,8 @@ public class RuleServiceImpl implements RuleService {
         Rule rule = mapper.toEntity(dto);
         Rule savedRule = ruleRepository.save(rule);
         log.info("Правило \"{}\" было создано", rule.getName());
+
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
         return savedRule.getId().toString();
     }
 
@@ -48,23 +53,22 @@ public class RuleServiceImpl implements RuleService {
 
     @Override
     @Transactional
-    public RuleViewDto  update(Long id, RuleUpdateDto dto) {
+    public RuleViewDto update(Long id, RuleUpdateDto dto) {
         Rule rule = ruleRepository.findByIdOrThrow(id);
         mapper.update(rule, dto);
         Rule savedRule = ruleRepository.save(rule);
         log.info("Правило \"{}\" было обновлено", rule.getName());
+
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
         return mapper.toDto(savedRule);
     }
 
-    public List<RuleRedisDto> getFromRedisOrDb() {
-        List<RuleRedisDto> rulesFromRedis = ruleCacheRepository.findAllRules();
-        if (rulesFromRedis != null) {
-            return rulesFromRedis;
-        }
-
-        List<Rule> ruleFromDb = ruleRepository.findAllByEnabledTrue();
-        List<RuleRedisDto> rulesAfterMapper = mapper.toRedisDtos(ruleFromDb);
-        ruleCacheRepository.saveRulesBatch(rulesAfterMapper);
-        return rulesAfterMapper;
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        Rule rule = ruleRepository.findByIdOrThrow(id);
+        ruleRepository.deleteById(id);
+        log.info("Правило \"{}\" было удалено", rule.getName());
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
     }
 }

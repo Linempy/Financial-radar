@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Builder
 public record TransactionRiskResult(
-    String transactionId,
+    Long transactionId,
     String correlationId,
     RiskDecision riskDecision,
     List<RuleResult> ruleResults,
