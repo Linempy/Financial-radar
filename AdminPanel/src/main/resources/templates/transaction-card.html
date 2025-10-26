@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали транзакции - Админ панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .info-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .info-value {
+            color: #212529;
+            font-size: 1rem;
+        }
+        .correlation-id {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .action-buttons {
+            position: sticky;
+            top: 20px;
+        }
+    </style>
+</head>
+<body>
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/admin">
+            <i class="bi bi-shield-check"></i> Финансовый Радар
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin/transactions"><i class="bi bi-credit-card"></i> Транзакции</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/rules"><i class="bi bi-list-check"></i> Правила</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logs"><i class="bi bi-journal-text"></i> Логи</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Главная</a></li>
+            <li class="breadcrumb-item"><a href="/admin/transactions">Транзакции</a></li>
+            <li class="breadcrumb-item active" th:text="'Транзакция #' + ${transaction.id}">Транзакция</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Основная информация -->
+        <div class="col-lg-8">
+            <!-- Заголовок и статусы -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h4 class="mb-2">
+                                <i class="bi bi-receipt"></i>
+                                Транзакция #<span th:text="${transaction.id}">123</span>
+                            </h4>
+                            <div class="text-muted">
+                                <i class="bi bi-calendar"></i>
+                                <span th:text="${transaction.formattedCreatedAt}">25.10.2025 09:00:00</span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                                <span th:class="${transaction.statusBadgeClass}"
+                                      th:text="${transaction.statusDisplay}"
+                                      class="d-block mb-2">
+                                    Статус
+                                </span>
+                            <span th:class="${transaction.fraudBadgeClass}"
+                                  th:text="'Мошенничество: ' + ${transaction.fraudDisplay}">
+                                    Мошенничество: Нет
+                                </span>
+                        </div>
+                    </div>
+
+                    <!-- Сумма -->
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="bi bi-cash-stack me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <div class="small text-muted">Сумма транзакции</div>
+                            <h3 class="mb-0" th:text="${transaction.formattedAmount}">1,500.00 RUB</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Детали транзакции -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Детали транзакции</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">Correlation ID</div>
+                            <div class="col-8 info-value">
+                                <span class="correlation-id" th:text="${transaction.correlationId}">abc-123-def</span>
+                                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard(this)"
+                                        th:attr="data-text=${transaction.correlationId}">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">ID отправителя</div>
+                            <div class="col-8 info-value">
+                                <i class="bi bi-person"></i>
+                                <span th:text="${transaction.senderId}">123456</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">ID получателя</div>
+                            <div class="col-8 info-value">
+                                <i class="bi bi-person-fill"></i>
+                                <span th:text="${transaction.receiverId}">654321</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">Валюта</div>
+                            <div class="col-8 info-value">
+                                <span th:text="${transaction.currency}">RUB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row" th:if="${transaction.description}">
+                        <div class="row">
+                            <div class="col-4 info-label">Описание</div>
+                            <div class="col-8 info-value">
+                                <span th:text="${transaction.description}">Оплата услуг</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">Дата создания</div>
+                            <div class="col-8 info-value">
+                                <i class="bi bi-clock"></i>
+                                <span th:text="${transaction.formattedCreatedAt}">25.10.2025 09:00:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="row">
+                            <div class="col-4 info-label">Дата обновления</div>
+                            <div class="col-8 info-value">
+                                <i class="bi bi-clock-history"></i>
+                                <span th:text="${transaction.formattedUpdatedAt}">25.10.2025 09:01:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Технические данные -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-gear"></i> Технические данные</h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-row" th:if="${transaction.ipAddress}">
+                        <div class="row">
+                            <div class="col-4 info-label">IP адрес</div>
+                            <div class="col-8 info-value">
+                                <i class="bi bi-router"></i>
+                                <code th:text="${transaction.ipAddress}">192.168.1.1</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row" th:if="${transaction.userAgent}">
+                        <div class="row">
+                            <div class="col-4 info-label">User Agent</div>
+                            <div class="col-8 info-value">
+                                <small class="text-muted" th:text="${transaction.userAgent}">
+                                    Mozilla/5.0...
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель с действиями -->
+        <div class="col-lg-4">
+            <div class="action-buttons">
+                <!-- Действия -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-lightning"></i> Действия</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" th:if="${transaction.status.name() == 'REVIEW_REQUIRED'}">
+                                <i class="bi bi-check-circle"></i> Одобрить
+                            </button>
+                            <button class="btn btn-danger" th:if="${transaction.status.name() == 'REVIEW_REQUIRED'}">
+                                <i class="bi bi-x-circle"></i> Отклонить
+                            </button>
+                            <button class="btn btn-warning" th:if="${transaction.status.name() == 'APPROVED'}">
+                                <i class="bi bi-exclamation-triangle"></i> Отправить на проверку
+                            </button>
+                            <a th:href="@{/admin/transactions}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад к списку
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Связанные данные -->
+                <div class="card mt-3">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-link-45deg"></i> Связанные данные</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="bi bi-list-check"></i> Сработавшие правила (3)
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="bi bi-journal-text"></i> История изменений
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-decoration-none">
+                                    <i class="bi bi-bell"></i> Отправленные уведомления
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function copyToClipboard(button) {
+        const text = button.getAttribute('data-text');
+        navigator.clipboard.writeText(text).then(() => {
+            const icon = button.querySelector('i');
+            icon.classList.remove('bi-clipboard');
+            icon.classList.add('bi-check');
+            setTimeout(() => {
+                icon.classList.remove('bi-check');
+                icon.classList.add('bi-clipboard');
+            }, 2000);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Транзакции - Админ панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f3f5;
+            cursor: pointer;
+        }
+        .filter-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/admin">
+            <i class="bi bi-shield-check"></i> Финансовый Радар
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin/transactions"><i class="bi bi-credit-card"></i> Транзакции</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/rules"><i class="bi bi-list-check"></i> Правила</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logs"><i class="bi bi-journal-text"></i> Логи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/settings"><i class="bi bi-gear"></i> Настройки</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="bi bi-receipt text-primary" style="font-size: 2rem;"></i>
+                <div class="number" th:text="${totalTransactions ?: 0}">0</div>
+                <div class="text-muted">Всего транзакций</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                <div class="number text-success" th:text="${approvedCount ?: 0}">0</div>
+                <div class="text-muted">Одобрено</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="bi bi-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                <div class="number text-warning" th:text="${reviewCount ?: 0}">0</div>
+                <div class="text-muted">На проверке</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <i class="bi bi-x-circle text-danger" style="font-size: 2rem;"></i>
+                <div class="number text-danger" th:text="${fraudCount ?: 0}">0</div>
+                <div class="text-muted">Мошенничество</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтры -->
+    <div class="filter-card">
+        <form method="get" action="/admin/transactions">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Статус</label>
+                    <select name="status" class="form-select">
+                        <option value="">Все статусы</option>
+                        <option value="CREATED">Создана</option>
+                        <option value="FRAUD_CHECKING">Проверка</option>
+                        <option value="APPROVED">Одобрена</option>
+                        <option value="FRAUD_DETECTED">Мошенничество</option>
+                        <option value="REVIEW_REQUIRED">Требует проверки</option>
+                        <option value="REJECTED">Отклонена</option>
+                        <option value="COMPLETED">Выполнена</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Дата от</label>
+                    <input type="date" name="dateFrom" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Дата до</label>
+                    <input type="date" name="dateTo" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Применить фильтр
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Таблица транзакций -->
+    <div class="card">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-list-ul"></i> Список транзакций</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Сумма</th>
+                        <th>Отправитель</th>
+                        <th>Получатель</th>
+                        <th>Статус</th>
+                        <th>Мошенничество</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="tx : ${transactions}" th:onclick="'location.href=\'/admin/transactions/' + ${tx.id} + '\''" style="cursor: pointer;">
+                        <td><code th:text="${tx.id}">1</code></td>
+                        <td th:text="${tx.formattedCreatedAt}">-</td>
+                        <td><strong th:text="${tx.formattedAmount}">100.00 RUB</strong></td>
+                        <td th:text="${tx.senderId}">-</td>
+                        <td th:text="${tx.receiverId}">-</td>
+                        <td>
+                                    <span th:class="${tx.statusBadgeClass}" th:text="${tx.statusDisplay}">
+                                        Статус
+                                    </span>
+                        </td>
+                        <td>
+                                    <span th:class="${tx.fraudBadgeClass}" th:text="${tx.fraudDisplay}">
+                                        -
+                                    </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/transactions/{id}(id=${tx.id})}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Детали
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(transactions)}">
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                            <div>Транзакции не найдены</div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
