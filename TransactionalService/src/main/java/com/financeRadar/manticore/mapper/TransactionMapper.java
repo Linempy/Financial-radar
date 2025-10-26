@@ -36,12 +36,17 @@ public interface TransactionMapper {
         return transaction;
     }
 
-    default TransactionRiskCheckEvent toEvent(TransactionCreateDto dto, String transactionId, String correlationId) {
+    default TransactionRiskCheckEvent toEvent(TransactionCreateDto dto,
+                                              String transactionId,
+                                              String correlationId,
+                                              String idempotencyKey) {
         return new TransactionRiskCheckEvent(
                 String.valueOf(dto.amount()),
                 dto.senderId().toString(),
                 transactionId,
                 correlationId,
+                idempotencyKey,
+                dto.currency(),
                 dto.createdAt().atZone(ZoneOffset.UTC).toInstant()
         );
     }

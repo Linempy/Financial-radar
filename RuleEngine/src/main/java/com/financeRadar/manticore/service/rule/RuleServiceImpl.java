@@ -3,19 +3,15 @@ package com.financeRadar.manticore.service.rule;
 import com.financeRadar.manticore.dto.RuleCreateDto;
 import com.financeRadar.manticore.dto.RuleUpdateDto;
 import com.financeRadar.manticore.dto.RuleViewDto;
-import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import com.financeRadar.manticore.mapper.RuleMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
-import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
 import com.financeRadar.manticore.service.refresh.RuleRefreshService;
 import com.financeRadar.manticore.utils.AfterCommitManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Сервис для взаимодействия с сущностью {@link Rule}
@@ -71,4 +67,7 @@ public class RuleServiceImpl implements RuleService {
         log.info("Правило \"{}\" было удалено", rule.getName());
         afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
     }
+
+
+
 }

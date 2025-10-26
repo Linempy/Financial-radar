@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.mapper.admin;
 
 import com.financeRadar.manticore.dto.admin.RuleAdminViewDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

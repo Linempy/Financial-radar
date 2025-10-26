@@ -8,14 +8,13 @@ import com.financeRadar.manticore.dto.TransactionViewDto;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.Transaction;
 import com.financeRadar.manticore.entity.TransactionStatus;
-import com.financeRadar.manticore.exception.DataValidationException;
+import com.financeRadar.manticore.logs.LokiLogger;
 import com.financeRadar.manticore.mapper.TransactionMapper;
 import com.financeRadar.manticore.mapper.TransactionViewMapper;
 import com.financeRadar.manticore.producer.TransactionCheckFraudProducer;
 import com.financeRadar.manticore.repository.redis.TransactionRedisRepository;
 import com.financeRadar.manticore.repository.sql.TransactionRepository;
 import com.financeRadar.manticore.utils.AfterCommitManager;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository repository;
     private final TransactionRedisRepository redisRepository;
     private final AfterCommitManager afterCommitManager;
+    private final LokiLogger lokiLogger;
 
     @Override
     @Transactional
@@ -50,10 +50,16 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction savedTransaction = repository.save(transaction);
         recordTransaction(dto.senderId(), dto.amount());
 
+        String correlationId = CorrelationContext.getCorrelationId();
+
+        lokiLogger.logTransactionSaved(correlationId, savedTransaction.getId().toString(),
+                TransactionStatus.FRAUD_CHECKING.name(), dto.amount().doubleValue(), dto.currency());
+
         TransactionRiskCheckEvent event = mapper.toEvent(
                 dto, 
                 savedTransaction.getId().toString(),
-                CorrelationContext.getCorrelationId()
+                correlationId,
+                context.idempotencyKey()
         );
 
         afterCommitManager.executeAfterCommit(() -> producer.sendMessage(event));

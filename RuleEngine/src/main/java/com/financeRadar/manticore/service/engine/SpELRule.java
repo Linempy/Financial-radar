@@ -3,8 +3,8 @@ package com.financeRadar.manticore.service.engine;
 
 import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.entity.RuleResult;
-import com.financeRadar.manticore.entity.RuleType;
+import com.financeRadar.manticore.entity.rule.RuleResult;
+import com.financeRadar.manticore.entity.rule.RuleType;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,9 +57,8 @@ public class SpELRule implements ExecutableRule {
             boolean triggered = Boolean.TRUE.equals(result);
 
             long durationMs = System.currentTimeMillis() - startTime;
-            //TODO ЛОГИИИ
-            log.info("rule@{}. name: {}; priority: {}, rule type: {}, durationMs: {}",
-                    rule.version(), rule.name(), rule.priority(), rule.ruleType(), durationMs
+            log.info("{}@{}. name: {}; priority: {}, rule type: {}, durationMs: {}",
+                    rule.id(), rule.version(), rule.name(), rule.priority(), rule.ruleType(), durationMs
             );
             return RuleResult.builder()
                     .ruleId(rule.id().toString())
@@ -68,9 +67,8 @@ public class SpELRule implements ExecutableRule {
                     .executionTimeMs(durationMs)
                     .build();
         } catch (Exception e) {
-            //TODO логии
-            log.warn("Ошибка выполнения правила {} '{}': {}",
-                    rule.id(), rule.expression(), e.getMessage());
+            log.warn("Ошибка выполнения правила {}@{} '{}': {}",
+                    rule.id(), rule.version(), rule.expression(), e.getMessage());
             return RuleResult.builder()
                     .ruleId(rule.id().toString())
                     .triggered(false)
@@ -94,5 +92,10 @@ public class SpELRule implements ExecutableRule {
     @Override
     public Integer getPriority() {
         return rule.priority();
+    }
+
+    @Override
+    public Long getVersion() {
+        return rule.version();
     }
 }

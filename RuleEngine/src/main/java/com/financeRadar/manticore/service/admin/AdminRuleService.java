@@ -3,7 +3,7 @@ package com.financeRadar.manticore.service.admin;
 import com.financeRadar.manticore.dto.RuleCreateDto;
 import com.financeRadar.manticore.dto.RuleUpdateDto;
 import com.financeRadar.manticore.dto.admin.RuleAdminViewDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import com.financeRadar.manticore.mapper.admin.RuleAdminMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.service.rule.RuleService;

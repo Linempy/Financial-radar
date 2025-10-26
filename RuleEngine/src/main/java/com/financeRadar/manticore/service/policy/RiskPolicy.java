@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.service.policy;
 
-import com.financeRadar.manticore.entity.RiskDecision;
-import com.financeRadar.manticore.entity.RuleResult;
+import com.financeRadar.manticore.entity.rule.RiskDecision;
+import com.financeRadar.manticore.entity.rule.RuleResult;
 
 import java.util.List;
 

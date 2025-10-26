@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.dto.redis;
 
-import com.financeRadar.manticore.entity.RuleType;
+import com.financeRadar.manticore.entity.rule.RuleType;
 
 /**
  * RuleRedisDto — описание класса.

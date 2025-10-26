@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.service.refresh;
 
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import com.financeRadar.manticore.mapper.RuleMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * RuleRefreshService — описание класса.

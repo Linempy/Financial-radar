@@ -3,7 +3,7 @@ package com.financeRadar.manticore.controller;
 import com.financeRadar.manticore.dto.RuleCreateDto;
 import com.financeRadar.manticore.dto.RuleUpdateDto;
 import com.financeRadar.manticore.dto.admin.RuleAdminViewDto;
-import com.financeRadar.manticore.entity.RuleType;
+import com.financeRadar.manticore.entity.rule.RuleType;
 import com.financeRadar.manticore.service.admin.AdminRuleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

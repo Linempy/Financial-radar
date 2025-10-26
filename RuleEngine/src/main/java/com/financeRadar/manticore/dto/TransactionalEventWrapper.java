@@ -38,7 +38,6 @@ public class TransactionalEventWrapper {
         return Long.valueOf(event.getSenderId());
     }
 
-
     public Long getTransactionalId() {
         return Long.valueOf(event.getTransactionId());
     }
@@ -47,9 +46,8 @@ public class TransactionalEventWrapper {
         return event.getCorrelationId();
     }
 
-    //TODO захардкожено на время
     public String getCurrency() {
-        return "RUB";
+        return event.getCurrency();
     }
 
     public LocalDateTime getTimestamp() {

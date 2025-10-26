@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.entity;
+package com.financeRadar.manticore.entity.rule;
 
 /**
  * RiskLevel — описание класса.
