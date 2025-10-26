@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.service;
+package com.financeRadar.manticore.service.transactions;
 
 import com.financeRadar.manticore.dto.RequestContext;
 import com.financeRadar.manticore.dto.TransactionCreateDto;
@@ -11,5 +11,5 @@ import com.financeRadar.manticore.dto.TransactionCreateDto;
  */
 public interface TransactionService {
 
-    void createWithChechRisk(TransactionCreateDto dto, RequestContext context);
+    void createWithCheckRisk(TransactionCreateDto dto, RequestContext context);
 }

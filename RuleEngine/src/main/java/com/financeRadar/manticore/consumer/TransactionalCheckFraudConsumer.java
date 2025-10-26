@@ -1,6 +1,5 @@
 package com.financeRadar.manticore.consumer;
 
-import com.financeRadar.manticore.dto.TransactionStats;
 import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.TransactionRiskResult;
@@ -36,6 +35,7 @@ public class TransactionalCheckFraudConsumer {
         //TODO>>> ЛОГИИ
         log.info("RESULT. correlationId: {}, is_fraud: {}", event.getCorrelationId(), result.riskDecision().isFraud());
         //TODO поменять статус транзакции (см статусы)
+
         log.info("{}", result.riskDecision());
     }
 }

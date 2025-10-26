@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.service;
+package com.financeRadar.manticore.service.transactions;
 
 import com.financeRadar.manticore.config.context.CorrelationContext;
 import com.financeRadar.manticore.dto.RequestContext;
@@ -13,11 +13,9 @@ import com.financeRadar.manticore.repository.redis.TransactionRedisRepository;
 import com.financeRadar.manticore.repository.sql.TransactionRepostitory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 
 /**
  * Сервис для взаимодействия с транзакциями
@@ -35,7 +33,7 @@ public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepostitory repository;
     private final TransactionRedisRepository redisRepository;
 
-    public void createWithChechRisk(TransactionCreateDto dto, RequestContext context) {
+    public void createWithCheckRisk(TransactionCreateDto dto, RequestContext context) {
         Transaction transaction = mapper.toEntity(dto, context);
         transaction.setStatus(TransactionStatus.FRAUD_CHECKING);
         Transaction savedTransaction = repository.save(transaction);

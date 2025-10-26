@@ -70,7 +70,7 @@ risk:
 scheduling:
   redis:
     rules:
-      reload: 0 */15 * * * *
+      reload: 0 */30 * * * *
 
 retry:
   config:
