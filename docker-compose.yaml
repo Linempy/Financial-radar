@@ -1,145 +1,126 @@
 version: '3.8'
-
 services:
   master_postgres:
     image: postgres:13.3
     container_name: hackathon_postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   master_redis:
     image: redis/redis-stack:latest
     container_name: hackathon_redis
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${REDIS_PORT}:6379"
     volumes:
       - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: hackathon_redis_insight
+    ports:
+      - "${REDIS_INSIGHT_PORT}:5540"
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    restart: unless-stopped
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.4.0
+    hostname: zookeeper
     container_name: hackathon_zookeeper
     ports:
-      - "${ZOOKEEPER_PORT:-2181}:2181"
+      - "${ZOOKEEPER_PORT}:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT:-2181}
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
+      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
 
   broker:
     image: confluentinc/cp-server:5.4.0
+    hostname: broker
     container_name: hackathon_broker
     depends_on:
       - zookeeper
     ports:
-      - "${KAFKA_PORT:-9092}:9092"
+      - "${KAFKA_PORT}:9092"
     environment:
-      KAFKA_BROKER_ID: 1
+      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: ${KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS}
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: ${KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR}
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: ${CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS}
+      CONFLUENT_METRICS_ENABLE: ${CONFLUENT_METRICS_ENABLE}
+      CONFLUENT_SUPPORT_CUSTOMER_ID: ${CONFLUENT_SUPPORT_CUSTOMER_ID}
+
+  kafka-tools:
+    image: confluentinc/cp-kafka:5.4.0
+    hostname: kafka-tools
+    container_name: hackathon_kafka-tools
+    command: [ "tail", "-f", "/dev/null" ]
+    network_mode: "host"
 
   schema-registry:
     image: confluentinc/cp-schema-registry:5.4.0
+    hostname: schema-registry
     container_name: hackathon_schema_registry
     depends_on:
+      - zookeeper
       - broker
     ports:
-      - "${SCHEMA_REGISTRY_PORT:-8087}:8081"
+      - "${SCHEMA_REGISTRY_PORT}:8081"
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://broker:9092
+      SCHEMA_REGISTRY_HOST_NAME: ${SCHEMA_REGISTRY_HOST_NAME}
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.4.0
+    hostname: control-center
+    container_name: hackathon_control_center
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - "${CONTROL_CENTER_PORT}:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
 
   loki:
     image: grafana/loki:2.9.1
-    container_name: hackathon_loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: hackathon_grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-
-  # ВАШИ СЕРВИСЫ с новой структурой
-  admin-panel:
-    build:
-      context: ./docker/admin
-      dockerfile: Dockerfile
-    container_name: admin_panel
-    ports:
-      - "8080:8080"
-    depends_on:
-      - master_postgres
-      - master_redis
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-
-  rule-engine:
-    build:
-      context: ./docker/ruleEngine
-      dockerfile: Dockerfile
-    container_name: rule_engine
-    ports:
-      - "8082:8082"
-    depends_on:
-      master_postgres:
-        condition: service_healthy
-      master_redis:
-        condition: service_healthy
-      broker:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-
-  transactional-service:
-    build:
-      context: ./docker/transactionalService
-      dockerfile: Dockerfile
-    container_name: transactional_service
-    ports:
-      - "8081:8081"
-    depends_on:
-      - master_postgres
-      - master_redis
-      - broker
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-
-  notification-service:
-    build:
-      context: ./docker/notification
-      dockerfile: Dockerfile
-    container_name: notification_service
-    ports:
-      - "8083:8083"
-    depends_on:
-      - broker
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-
 volumes:
   postgres_data:
   redis_data:
-  grafana_data:
-
-networks:
-  default:
-    driver: bridge
