@@ -55,3 +55,14 @@
 ```  
   docker-compose up
 ```
+
+4. Доступ осуществляется локально
+Админ панель
+```
+  localhost:8080/admin/dashboard
+```
+Метрики (Grafana)
+```
+  localhost:3030
+```
+Логин/пароль от Grafana стандартный: admin/admin
