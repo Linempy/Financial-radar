@@ -65,6 +65,11 @@ public class TransactionServiceImpl implements TransactionService {
         afterCommitManager.executeAfterCommit(() -> producer.sendMessage(event));
     }
 
+    @Transactional
+    public void updateStatus(Long id, Boolean isFraud, TransactionStatus result) {
+        repository.updateStatus(id, isFraud, result.name());
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<TransactionViewDto> getAllTransactionsForView() {

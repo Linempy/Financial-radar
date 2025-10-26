@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.service.engine;
 
 import com.financeRadar.manticore.dto.TransactionalEventWrapper;
-import com.financeRadar.manticore.entity.transaction.TransactionRiskResult;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
 
 /**
  * Интерфейс для реализации логики определения подозрительной транзакции по правилам

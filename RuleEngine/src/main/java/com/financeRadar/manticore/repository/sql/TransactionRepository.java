@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.repository.sql;
 
-import com.financeRadar.manticore.entity.transaction.Transaction;
+import com.financeRadar.manticore.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

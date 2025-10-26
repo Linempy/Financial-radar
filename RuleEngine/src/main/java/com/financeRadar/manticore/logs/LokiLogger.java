@@ -2,9 +2,9 @@ package com.financeRadar.manticore.logs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeRadar.manticore.entity.TransactionStatus;
 import com.financeRadar.manticore.entity.rule.RiskDecision;
 import com.financeRadar.manticore.entity.rule.RuleResult;
-import com.financeRadar.manticore.entity.transaction.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;

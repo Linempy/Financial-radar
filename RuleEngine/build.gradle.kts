@@ -75,6 +75,8 @@ dependencies {
      * Micrometer
      */
     implementation ("io.micrometer:micrometer-registry-prometheus")
+
+    implementation(project(":TransactionalService"))
 }
 
 tasks.test {
