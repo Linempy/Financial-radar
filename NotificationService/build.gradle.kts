@@ -48,4 +48,11 @@ dependencies {
      * Шаблонизатор писем (Thymeleaf)
      */
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    /**
+     * Логи
+     */
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("com.github.loki4j:loki-logback-appender:1.2.0")
 }

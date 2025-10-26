@@ -77,6 +77,13 @@ dependencies {
     implementation ("io.micrometer:micrometer-registry-prometheus")
 
     implementation(project(":TransactionalService"))
+
+    /**
+     * Логи
+     */
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("com.github.loki4j:loki-logback-appender:1.2.0")
 }
 
 tasks.test {
