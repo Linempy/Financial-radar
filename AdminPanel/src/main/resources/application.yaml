@@ -2,6 +2,23 @@ server:
   port: 8080
 
 spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: Kir32kir@mail.ru
+    password: YtVxbHxoLuMYUtKIezjz
+    protocol: smtps
+    from: Kir32kir@mail.ru
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.mail.ru
+          starttls:
+            enable: false
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -35,6 +52,10 @@ spring:
           name: check_transaction
           partitions: 1
           replicas: 1
+      notification:
+        name: send_notification
+        partition-count: 1
+        replica-count: 1
     producer:
       keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
       valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
