@@ -76,19 +76,4 @@ public class Transaction {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    public void markAsFraud() {
-        this.status = TransactionStatus.FRAUD_DETECTED;
-        this.isFraud = true;
-    }
-
-    public void markAsApproved() {
-        this.status = TransactionStatus.APPROVED;
-        this.isFraud = false;
-    }
-
-    public void markForReview() {
-        this.status = TransactionStatus.REVIEW_REQUIRED;
-        this.isFraud = null;
-    }
 }

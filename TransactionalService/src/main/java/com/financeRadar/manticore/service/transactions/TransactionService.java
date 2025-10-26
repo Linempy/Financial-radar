@@ -3,6 +3,7 @@ package com.financeRadar.manticore.service.transactions;
 import com.financeRadar.manticore.dto.RequestContext;
 import com.financeRadar.manticore.dto.TransactionCreateDto;
 import com.financeRadar.manticore.dto.TransactionViewDto;
+import com.financeRadar.manticore.entity.TransactionStatus;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public interface TransactionService {
      * Получить все транзакции для отображения в админ-панели
      */
     List<TransactionViewDto> getAllTransactionsForView();
+
+
+    void updateStatus(Long id, Boolean isFraud, TransactionStatus result);
 
     /**
      * Получить транзакцию по ID для отображения в админ-панели

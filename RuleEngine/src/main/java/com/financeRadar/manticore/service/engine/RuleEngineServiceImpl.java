@@ -3,7 +3,7 @@ package com.financeRadar.manticore.service.engine;
 import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.entity.rule.RiskDecision;
 import com.financeRadar.manticore.entity.rule.RuleResult;
-import com.financeRadar.manticore.entity.transaction.TransactionRiskResult;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
 import com.financeRadar.manticore.logs.LokiLogger;
 import com.financeRadar.manticore.service.policy.RiskPolicy;
 import lombok.RequiredArgsConstructor;

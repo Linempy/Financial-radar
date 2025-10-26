@@ -15,6 +15,6 @@ public enum TransactionStatus {
     APPROVED,          // Одобрена
     FRAUD_DETECTED,    // Обнаружено мошенничество
     REVIEW_REQUIRED,   // Требует ручной проверки
-    REJECTED,          // Отклонена (не мошенничество, но по другим причинам)
+    FAILED,          // Отклонена (не мошенничество, но по другим причинам)
     COMPLETED          // Успешно выполнена
 }

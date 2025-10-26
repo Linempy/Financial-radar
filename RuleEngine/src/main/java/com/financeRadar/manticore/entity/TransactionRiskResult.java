@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.entity.transaction;
+package com.financeRadar.manticore.entity;
 
 import com.financeRadar.manticore.entity.rule.RiskDecision;
 import com.financeRadar.manticore.entity.rule.RuleResult;

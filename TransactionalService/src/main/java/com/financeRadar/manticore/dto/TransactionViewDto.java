@@ -56,7 +56,7 @@ public record TransactionViewDto(
             case APPROVED -> "Одобрена";
             case FRAUD_DETECTED -> "Мошенничество";
             case REVIEW_REQUIRED -> "Требует проверки";
-            case REJECTED -> "Отклонена";
+            case FAILED -> "Отклонена";
             case COMPLETED -> "Выполнена";
         };
     }
@@ -72,7 +72,7 @@ public record TransactionViewDto(
             case APPROVED -> "badge bg-success";
             case FRAUD_DETECTED -> "badge bg-danger";
             case REVIEW_REQUIRED -> "badge bg-warning text-dark";
-            case REJECTED -> "badge bg-dark";
+            case FAILED -> "badge bg-dark";
             case COMPLETED -> "badge bg-primary";
         };
     }

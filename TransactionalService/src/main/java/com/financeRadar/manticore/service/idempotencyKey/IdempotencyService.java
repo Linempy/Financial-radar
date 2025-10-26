@@ -104,23 +104,12 @@ public class IdempotencyService {
         markCompleted(idempotencyKey, IdempotencyStatus.FAILED);
     }
 
-    public IdempotencyStatus getKeyStatus(String idempotencyKey) {
-        try {
-            String key = KEY_PREFIX + idempotencyKey;
-            return (IdempotencyStatus) redisTemplate.opsForValue().get(key);
-        } catch (Exception e) {
-            log.error("Ошибка получения статуса ключа: {}", idempotencyKey, e);
-            return null;
-        }
-    }
 
     private void markCompleted(String idempotencyKey, IdempotencyStatus status) {
+        String key = KEY_PREFIX + idempotencyKey;
         try {
-            String key = KEY_PREFIX + idempotencyKey;
-
-            redisTemplate.opsForValue().set(key, status, Duration.ofMinutes(keyTtl));
-
-            log.debug("Ключ {} отмечен как {} в ответе", idempotencyKey, status);
+            redisTemplate.delete(key);
+            log.debug("Ключ {} отмечен как {} в ответе. Ключ освобожден", idempotencyKey, status);
         } catch (Exception e) {
             log.error("Ошибка пометкой ключа {} как завершенного: {}", idempotencyKey, e.getMessage());
             throw new RuntimeException("Не удалось пометить ключ как выполненный", e);

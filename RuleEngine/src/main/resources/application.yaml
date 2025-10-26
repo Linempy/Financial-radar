@@ -16,7 +16,7 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change-log: classpath:db/changelog/db.changelog-master-rule-engine.yaml
 
   data:
     redis:
@@ -28,6 +28,8 @@ spring:
       schema:
         rule:
           ttl-days: 1
+        idempotency-key:
+          ttl-min: 5
 
   kafka:
     bootstrap-servers: localhost:9092

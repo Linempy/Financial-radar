@@ -99,6 +99,10 @@ thread-pool:
       core-pool-size: 5
       max-pool-size: 10
       queue-capacity: 1000
+    commit:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000
 
 risk:
   threshold: 2

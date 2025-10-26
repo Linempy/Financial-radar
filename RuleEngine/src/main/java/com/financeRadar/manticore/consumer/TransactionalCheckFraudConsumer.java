@@ -2,13 +2,13 @@ package com.financeRadar.manticore.consumer;
 
 import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
-import com.financeRadar.manticore.entity.transaction.TransactionRiskResult;
-import com.financeRadar.manticore.entity.transaction.TransactionStatus;
+import com.financeRadar.manticore.entity.TransactionRiskResult;
+import com.financeRadar.manticore.entity.TransactionStatus;
 import com.financeRadar.manticore.logs.LokiLogger;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
 import com.financeRadar.manticore.service.engine.RuleEngineService;
-import com.financeRadar.manticore.service.transaction.idempotencyKey.IdempotencyService;
-import com.financeRadar.manticore.service.transaction.TransactionService;
+import com.financeRadar.manticore.service.idempotencyKey.IdempotencyService;
+import com.financeRadar.manticore.service.transactions.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
