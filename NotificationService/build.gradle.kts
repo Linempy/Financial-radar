@@ -1,5 +1,7 @@
 plugins {
     id("org.springframework.boot")
+    id("com.github.davidmc24.gradle.plugin.avro")
+
 }
 
 dependencies {
@@ -56,8 +58,27 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.11")
     implementation("com.github.loki4j:loki-logback-appender:1.2.0")
 
+
+    /**
+     * Avro
+     */
+    implementation("org.apache.avro:avro:1.11.1")
+    implementation("io.confluent:kafka-avro-serializer:7.4.0")
+    implementation("io.confluent:kafka-schema-registry-client:7.4.0")
+
     /**
      * Telegram bot
      */
     implementation("org.telegram:telegrambots:6.9.7.1")
+}
+
+avro {
+    isCreateSetters = false
+    fieldVisibility = "PRIVATE"
+    outputCharacterEncoding = "UTF-8"
+}
+
+tasks.named<com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask>("generateAvroJava") {
+    setSource(file("src/main/resources/avro"))
+    setOutputDir(file("$buildDir/generated-sources/avro"))
 }

@@ -37,6 +37,14 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic checkNotification(@Value("${spring.kafka.topics.notification.name}") String topic) {
+        return TopicBuilder.name(topic)
+                .partitions(partitionCount)
+                .replicas(replicasCount)
+                .build();
+    }
+
+    @Bean
     public CommonErrorHandler kafkaErrorHandler() {
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 (record, exception) -> {
@@ -47,4 +55,5 @@ public class KafkaConfig {
         );
         return errorHandler;
     }
+
 }

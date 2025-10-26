@@ -1,0 +1,55 @@
+{
+  "namespace": "com.financeRadar.manticore.dto.avro",
+  "type": "record",
+  "name": "SuspiciousTransactionNotificationEvent",
+  "fields": [
+    {
+      "name": "senderId",
+      "type": "long",
+      "doc": "ID отправителя"
+    },
+    {
+      "name": "receiverId",
+      "type": "long",
+      "doc": "ID получателя"
+    },
+    {
+      "name": "receiverEmail",
+      "type": "string",
+      "doc": "Почта получателя админа"
+    },
+    {
+      "name": "subject",
+      "type": "string",
+      "doc": "Шаблон письма"
+    },
+    {
+      "name": "correlationId",
+      "type": "string",
+      "doc": "Correlation ID для трассировки"
+    },
+    {
+      "name": "amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 15,
+        "scale": 2
+      },
+      "doc": "Сумма операции"
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Время операции"
+    },
+    {
+      "name": "reasons",
+      "type": "string",
+      "doc": "Причина подозрительности"
+    }
+  ]
+}

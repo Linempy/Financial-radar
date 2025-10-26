@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.service;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
+import com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -47,7 +48,7 @@ public class TelegramNotificationService extends TelegramLongPollingBot {
         // заглушка
     }
 
-    public void sendAlert(SuspiciousTransactionNotificationDto dto) {
+    public void sendAlert(SuspiciousTransactionNotificationEvent dto) {
         String message = String.format("""
             🚨 Подозрительная транзакция
             
@@ -58,12 +59,13 @@ public class TelegramNotificationService extends TelegramLongPollingBot {
             Получатель: %d
             Причины: %s
             """,
-                dto.correlationId(),
-                dto.amount(),
-                dto.timestamp().format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")),
-                dto.senderId(),
-                dto.receiverId(),
-                dto.reasons()
+                dto.getCorrelationId(),
+                dto.getAmount(),
+                dto.getTimestamp().atZone(ZoneId.systemDefault())
+                        .format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")),
+                dto.getSenderId(),
+                dto.getReceiverId(),
+                dto.getReasons()
         );
 
         SendMessage msg = new SendMessage(chatId, message);

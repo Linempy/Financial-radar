@@ -34,7 +34,6 @@ public class LokiLogger {
                                String stage, Object data) {
         try {
             Map<String, Object> logEntry = Map.of(
-                    "correlationId", correlationId,
                     "stage", stage,
                     "transactionId", transactionId,
                     "data", data,
@@ -59,7 +58,6 @@ public class LokiLogger {
 
     public void logRuleExecution(String correlationId, String transactionId, RuleResult ruleResult, Long version) {
         Map<String, Object> ruleData = Map.of(
-                "correlationId", correlationId,
                 "ruleId", ruleResult.ruleId(),
                 "version", version,
                 "ruleName", ruleResult.ruleName(),
@@ -75,7 +73,6 @@ public class LokiLogger {
     public void logRiskDecision(String correlationId, String transactionId,
                                 RiskDecision decision, List<RuleResult> rules) {
         Map<String, Object> decisionData = Map.of(
-                "correlationId", correlationId,
                 "isFraud", decision.isFraud(),
                 "riskLevel", decision.getRiskLevel(),
                 "riskScore", decision.getRiskScore(),
@@ -95,7 +92,6 @@ public class LokiLogger {
      */
     public void logKafkaEventReceived(String correlationId, String transactionId) {
         Map<String, Object> eventData = Map.of(
-                "correlationId", correlationId,
                 "action", "Ивент был получен слушателем",
                 "source", "kafka_consumer"
         );
@@ -109,13 +105,11 @@ public class LokiLogger {
     public void logTransactionStatusUpdate(String correlationId, String transactionId,
                                            TransactionStatus oldStatus, TransactionStatus newStatus,
                                            Boolean isFraud) {
-        Map<String, Object> statusData = Map.of(
-                "correlationId", correlationId,
-                "oldStatus", oldStatus != null ? oldStatus.name() : "null",
-                "newStatus", newStatus.name(),
-                "isFraud", isFraud,
-                "type", "status_update"
-        );
+        Map<String, Object> statusData = new HashMap<>();
+        statusData.put("oldStatus", oldStatus != null ? oldStatus.name() : "null");
+        statusData.put("newStatus", newStatus.name());
+        statusData.put("isFraud", isFraud);
+        statusData.put("type", "status_update");
 
         logTransaction(correlationId, transactionId, "TRANSACTION_STATUS_UPDATED", statusData);
     }
@@ -126,7 +120,6 @@ public class LokiLogger {
     public void logProcessingError(String correlationId, String transactionId,
                                    Exception error, String stage) {
         Map<String, Object> errorData = new HashMap<>();
-        errorData.put("correlationId", correlationId);
         errorData.put("errorMessage", error != null ? error.getMessage() : "Unknown error");
         errorData.put("exceptionType", error != null ? error.getClass().getSimpleName() : "Unknown");
         errorData.put("stage", stage != null ? stage : "unknown");

@@ -5,6 +5,7 @@
   "fields": [
     {"name": "amount", "type": "string"},
     {"name": "senderId", "type": "string"},
+    {"name": "receiverId", "type": "string"},
     {"name": "transactionId", "type": "string"},
     {"name": "correlationId", "type": "string"},
     {"name": "idempotencyKey", "type": "string"},

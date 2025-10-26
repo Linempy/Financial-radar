@@ -1,9 +1,8 @@
 package com.financeRadar.manticore.controller;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
+import com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent;
 import com.financeRadar.manticore.service.TelegramNotificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,7 @@ public class TelegramTestController {
     private final TelegramNotificationService bot;
 
     @PostMapping("/alert")
-    public String sendAlert(@RequestBody SuspiciousTransactionNotificationDto dto) {
+    public String sendAlert(@RequestBody SuspiciousTransactionNotificationEvent dto) {
         bot.sendAlert(dto);
         return "Сообщение отправлено";
     }
