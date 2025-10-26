@@ -44,11 +44,15 @@
 
 ## Как запустить?
 1. Клонировать репозиторий
+```Java
   git clone git@git.codenrock.com:it-one-cup-code-analyst-1568/cnrprod1760719343-team-89219/repozitorij-dlya-raboty-7408.git
+```
 
 2. Собрать проект с помощью Gradle
+```
   build gradle
-
+```
 3. Поднять Docker командой
+```  
   docker-compose up
-
+```
