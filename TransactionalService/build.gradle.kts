@@ -72,6 +72,13 @@ dependencies {
     implementation("io.confluent:kafka-schema-registry-client:7.4.0")
     testImplementation("org.testcontainers:kafka:1.19.3")
     testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+
+    /**
+     * Логи
+     */
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("com.github.loki4j:loki-logback-appender:1.2.0")
 }
 
 tasks.test {

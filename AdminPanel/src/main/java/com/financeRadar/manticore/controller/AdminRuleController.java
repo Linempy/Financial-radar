@@ -36,7 +36,7 @@ public class AdminRuleController {
     }
 
     @GetMapping("/{id}")
-    public String getRuleDetails(@PathVariable Long id, Model model) {
+    public String getRuleDetails(@PathVariable("id") Long id, Model model) {
         RuleAdminViewDto rule = adminRuleService.getRuleById(id);
         model.addAttribute("rule", rule);
         return "rule-card";
@@ -71,7 +71,7 @@ public class AdminRuleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
         RuleAdminViewDto rule = adminRuleService.getRuleById(id);
 
         RuleUpdateDto updateDto = new RuleUpdateDto(
@@ -90,7 +90,7 @@ public class AdminRuleController {
     }
 
     @PostMapping("/{id}")
-    public String updateRule(@PathVariable Long id,
+    public String updateRule(@PathVariable("id") Long id,
                              @Valid @ModelAttribute RuleUpdateDto dto,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
@@ -114,7 +114,7 @@ public class AdminRuleController {
     }
 
     @PostMapping("/{id}/toggle")
-    public String toggleStatus(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String toggleStatus(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             adminRuleService.toggleRuleStatus(id);
             redirectAttributes.addFlashAttribute("successMessage", "Статус правила изменён");
@@ -125,7 +125,7 @@ public class AdminRuleController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteRule(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteRule(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             adminRuleService.deleteRule(id);
             redirectAttributes.addFlashAttribute("successMessage", "Правило удалено");
