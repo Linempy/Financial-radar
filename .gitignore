@@ -15,8 +15,7 @@ build/
 target/
 
 ## IntelliJ IDEA
-.idea/libraries
-.idea/*.xml
+.idea/
 *.ipr
 *.iws
 *.iml

@@ -39,24 +39,4 @@ public record TransactionCreateDto(
         @Nullable
         String description
 ) {
-
-    public TransactionCreateDto {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (createdAt.isAfter(now)) {
-            throw new DataValidationException("Транзакция не может быть совершена в будущем");
-        }
-
-        if (createdAt.isBefore(now.minusDays(1))) {
-            throw new DataValidationException("Транзакция является слишком старой (макс. 1 день)");
-        }
-
-        if (senderId.equals(receiverId)) {
-            throw new DataValidationException("Отправитель и получатель не могут быть одной и той же сущностью");
-        }
-
-        if (amount.compareTo(BigDecimal.ONE) < 0) {
-            throw new DataValidationException("Сумма не может быть меньше 1");
-        }
-    }
 }

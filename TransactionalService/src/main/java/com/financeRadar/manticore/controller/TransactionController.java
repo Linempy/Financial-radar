@@ -2,7 +2,8 @@ package com.financeRadar.manticore.controller;
 
 import com.financeRadar.manticore.dto.RequestContext;
 import com.financeRadar.manticore.dto.TransactionCreateDto;
-import com.financeRadar.manticore.service.TransactionServiceImpl;
+import com.financeRadar.manticore.service.transactions.TransactionServiceImpl;
+import com.financeRadar.manticore.validate.TransactionValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/transactional")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
 
     private final TransactionServiceImpl service;
+    private final TransactionValidator validator;
 
     @PostMapping
     public ResponseEntity<Void> createTransactionWithCheckRisk(
             @RequestBody @Valid TransactionCreateDto dto,
             HttpServletRequest request) {
+        validator.validate(dto);
         RequestContext context = new RequestContext(request.getRemoteAddr(), request.getHeader("User-Agent"));
-        service.createWithChechRisk(dto, context);
+        service.createWithCheckRisk(dto, context);
         return ResponseEntity.ok().build();
     }
 }

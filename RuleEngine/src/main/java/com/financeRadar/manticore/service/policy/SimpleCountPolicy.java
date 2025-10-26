@@ -44,7 +44,7 @@ public class SimpleCountPolicy implements RiskPolicy{
                 .triggeredRules(ruleResults.stream()
                         .filter(RuleResult::triggered)
                         .map(RuleResult::ruleName)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .requiresReview(false)
                 .build();
     }

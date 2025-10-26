@@ -3,6 +3,7 @@ package com.financeRadar.manticore.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 public class RiskDecision {
     private boolean isFraud;
     private RiskLevel riskLevel;

@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.service.engine;
 
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.service.rule.RuleService;
+import com.financeRadar.manticore.service.refresh.RuleRefreshService;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RuleManager {
 
-    private final RuleService ruleService;
+    private final RuleRefreshService refreshService;
     private final ApplicationContext applicationContext;
 
     private final AtomicReference<List<ExecutableRule>> rulesRef =
@@ -56,15 +55,15 @@ public class RuleManager {
     @Async("RuleExecutor")
     public void refreshRules() {
         try {
-            List<RuleRedisDto> ruleDtos = ruleService.getFromRedisOrDb();
+            List<RuleRedisDto> ruleDtos = refreshService.getFromRedisOrDb();
 
             List<ExecutableRule> newRules = ruleDtos.stream()
-                    .sorted(Comparator.comparing(RuleRedisDto::priority).reversed())
+                    .sorted(Comparator.comparing(RuleRedisDto::priority))
                     .map(this::createExecutableRule)
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
 
-            rulesRef.set(Collections.unmodifiableList(newRules));
+            rulesRef.set(newRules);
 
             log.info("Правила обновлены: {} активных правил", newRules.size());
 

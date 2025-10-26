@@ -1,5 +1,6 @@
 package com.financeRadar.manticore.service.engine;
 
+import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.RuleResult;
 import com.financeRadar.manticore.entity.RuleType;
@@ -17,5 +18,5 @@ public interface ExecutableRule {
     Long getId();
     RuleType getType();
     Integer getPriority();
-    RuleResult evaluate(TransactionRiskCheckEvent tx);
+    RuleResult evaluate(TransactionalEventWrapper tx);
 }

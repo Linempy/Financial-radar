@@ -1,5 +1,6 @@
 package com.financeRadar.manticore.service.engine;
 
+import com.financeRadar.manticore.dto.TransactionalEventWrapper;
 import com.financeRadar.manticore.dto.avro.TransactionRiskCheckEvent;
 import com.financeRadar.manticore.entity.TransactionRiskResult;
 
@@ -10,6 +11,6 @@ import com.financeRadar.manticore.entity.TransactionRiskResult;
  * @since 19.10.2025
  */
 public interface RuleEngineService {
-    TransactionRiskResult checkTransaction(TransactionRiskCheckEvent event);
+    TransactionRiskResult checkTransaction(TransactionalEventWrapper event);
 
 }

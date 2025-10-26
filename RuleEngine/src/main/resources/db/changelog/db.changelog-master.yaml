@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changeset/V002_insert_initial_rules.sql
   - include:
       file: db/changelog/changeset/V003_alter_table_rules.sql
+  - include:
+      file: db/changelog/changeset/V004_update_rule_table.sql

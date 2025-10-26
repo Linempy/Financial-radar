@@ -59,6 +59,14 @@ spring:
             reader: "true"
 
 
+transaction:
+  rules:
+    count-window: PT10M
+    hourly-window: PT1H
+    daily-window: P1D
+    max-transactions-per-window:
+    max-amount-per-day: 100000
+    redis-ttl: PT15M
 
 server:
   port: 8081
@@ -75,3 +83,10 @@ retry:
     delay: 1000
     max-interval-ms: 10_000
 
+
+thread-pool:
+  async:
+    commit:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000

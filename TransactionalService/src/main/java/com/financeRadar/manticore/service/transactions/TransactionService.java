@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.service;
+package com.financeRadar.manticore.service.transactions;
 
 import com.financeRadar.manticore.dto.RequestContext;
 import com.financeRadar.manticore.dto.TransactionCreateDto;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface TransactionService {
 
-    void createWithChechRisk(TransactionCreateDto dto, RequestContext context);
+    void createWithCheckRisk(TransactionCreateDto dto, RequestContext context);
 
     /**
      * Получить все транзакции для отображения в админ-панели
@@ -24,5 +24,5 @@ public interface TransactionService {
     /**
      * Получить транзакцию по ID для отображения в админ-панели
      */
-    TransactionViewDto getTransactionByIdForView(Long id);
+//    TransactionViewDto getTransactionByIdForView(Long id);
 }
