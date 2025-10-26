@@ -1,0 +1,134 @@
+server:
+  port: 8080
+
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: Kir32kir@mail.ru
+    password: YtVxbHxoLuMYUtKIezjz
+    protocol: smtps
+    from: Kir32kir@mail.ru
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.mail.ru
+          starttls:
+            enable: false
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://master_postgres:5432/postgres
+    username: user
+    password: password
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    enabled: false
+
+  kafka:
+    bootstrap-servers: broker:9092
+    topics:
+      transactions:
+        check:
+          name: check_transaction
+          partitions: 1
+          replicas: 1
+      notification:
+        name: send_notification
+        partition-count: 1
+        replica-count: 1
+    producer:
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
+      valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      properties:
+        schema:
+          registry:
+            url: "http://schema-registry:8081"
+    consumer:
+      enable-auto-commit: true
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      properties:
+        schema:
+          registry:
+            url: "http://schema-registry:8081"
+        specific:
+          avro:
+            reader: "true"
+
+  data:
+    redis:
+      port: 6379
+      host: master_redis
+      channels:
+        calculations_channel:
+          name: calculations_channel
+      schema:
+        idempotency-key:
+          ttl-min: 5
+        rule:
+          ttl-days: 1
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: prometheus, health, info
+
+  endpoint:
+    prometheus:
+      enabled: true
+
+scheduling:
+  redis:
+    rules:
+      reload: 0 */15 * * * *
+
+retry:
+  config:
+    max-attempts: 3
+    initial-interval-ms: 1000
+    multiplier: 2.0
+    delay: 1000
+    max-interval-ms: 10_000
+
+thread-pool:
+  async:
+    rule:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000
+    commit:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000
+
+risk:
+  threshold: 2
+
+logging:
+  config: classpath:logback-docker.xml
+  level:
+    root: info
+    com.financeRadar.manticore: debug

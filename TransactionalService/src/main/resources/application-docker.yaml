@@ -1,0 +1,91 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://master_postgres:5432/postgres
+    username: user
+    password: password
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  data:
+    redis:
+      port: 6379
+      host: master_redis
+      channels:
+        calculations_channel:
+          name: calculations_channel
+      schema:
+        idempotency-key:
+          ttl-min: 5
+
+  kafka:
+    bootstrap-servers: broker:9092
+    topics:
+      transactions:
+        check:
+          name: check_transaction
+          partitions: 1
+          replicas: 1
+    producer:
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
+      valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      properties:
+        schema:
+          registry:
+            url: "http://schema-registry:8081"
+    consumer:
+      enable-auto-commit: true
+      group-id: "post-service-group"
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      properties:
+        schema:
+          registry:
+            url: "http://schema-registry:8081"
+        specific:
+          avro:
+            reader: "true"
+
+transaction:
+  rules:
+    count-window: PT10M
+    hourly-window: PT1H
+    daily-window: P1D
+    max-transactions-per-window:
+    max-amount-per-day: 100000
+    redis-ttl: PT15M
+
+server:
+  port: 8081
+
+logging:
+  config: classpath:logback-docker.xml
+  level:
+    root: info
+
+retry:
+  config:
+    max-attempts: 3
+    initial-interval-ms: 1000
+    multiplier: 2.0
+    delay: 1000
+    max-interval-ms: 10_000
+
+thread-pool:
+  async:
+    commit:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000

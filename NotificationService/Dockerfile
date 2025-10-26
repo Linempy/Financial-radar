@@ -1,16 +1,30 @@
-## TODO ДОДЕЛАТЬ!!!
+FROM gradle:7.6.6-jdk17 AS builder
 
-FROM gradle:7-jdk17 AS build
 WORKDIR /workspace
 
+COPY settings.gradle.kts .
 COPY build.gradle.kts .
-COPY src ./src
+COPY gradle.properties .
+COPY gradlew .
+COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/
+COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/
 
-RUN gradle build -x test --no-daemon
+COPY AdminPanel ./AdminPanel
+COPY NotificationService ./NotificationService
+COPY RuleEngine ./RuleEngine
+COPY TransactionalService ./TransactionalService
+COPY AuditService ./AuditService
 
-FROM openjdk:17-jdk-slim
+RUN chmod +x gradlew
+
+RUN ./gradlew :NotificationService:build -x test --no-daemon
+
+FROM eclipse-temurin:17-jre
+
 WORKDIR /app
 
-COPY --from=build /workspace/build/libs/*.jar app.jar
+COPY --from=builder /workspace/NotificationService/build/libs/*.jar app.jar
+
 EXPOSE 8081
+
 ENTRYPOINT ["java", "-jar", "app.jar"]

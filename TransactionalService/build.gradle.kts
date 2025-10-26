@@ -2,6 +2,8 @@
 plugins {
     id("org.springframework.boot")
     id("com.github.davidmc24.gradle.plugin.avro")
+    id("io.spring.dependency-management")
+    id("java")
 }
 
 

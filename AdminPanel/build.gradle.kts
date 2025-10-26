@@ -1,3 +1,9 @@
+plugins {
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("java")
+}
+
 dependencies {
 
     /**
@@ -61,12 +67,9 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     /**
-     * TransactionalService
-     */
-    implementation(project(":TransactionalService"))
-
-    /**
      * RuleEngine
      */
     implementation(project(":RuleEngine"))
+
+    implementation(project(":TransactionalService"))
 }

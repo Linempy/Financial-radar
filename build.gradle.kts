@@ -18,6 +18,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
     the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().apply {

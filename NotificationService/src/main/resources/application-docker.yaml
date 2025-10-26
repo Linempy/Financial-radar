@@ -1,0 +1,60 @@
+server:
+  port: 8083
+
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: Kir32kir@mail.ru
+    password: YtVxbHxoLuMYUtKIezjz
+    protocol: smtps
+    from: Kir32kir@mail.ru
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.mail.ru
+          starttls:
+            enable: false
+
+  kafka:
+    bootstrap-servers: broker:9092
+    topics:
+      notification:
+        name: send_notification
+        partition-count: 1
+        replica-count: 1
+      dlq:
+        name: dlq
+        partition-count: 1
+        replica-count: 1
+
+    consumer:
+      group-id: "notification-group"
+      enable-auto-commit: true
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      properties:
+        schema:
+          registry:
+            url: "http://schema-registry:8081"
+        specific:
+          avro:
+            reader: "true"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    listener:
+      missing-topics-fatal: false
+
+telegram:
+  bot:
+    token: 8360417760:AAGxME60GdtiHDoOgHEi9WM260zabNfUoyE
+    name: TransactionAlertBot
+    group-id: -4891092304
+
+logging:
+  config: classpath:logback-docker.xml

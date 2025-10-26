@@ -1,15 +1,19 @@
-## TODO ДОДЕЛАТЬ!!!
+FROM gradle:7.6.6-jdk17 AS build
 
-FROM gradle:7-jdk17 AS build
-WORKDIR /workspace
-
+COPY settings.gradle.kts .
 COPY build.gradle.kts .
-COPY src ./src
+COPY gradle ./gradle
 
-RUN gradle build -x test --no-daemon
+COPY gradle/plugins.gradle.kts ./gradle/
+
+COPY TransactionalService ./TransactionalService
+
+RUN gradle :TransactionalService:build -x test --no-daemon
 
 FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /workspace/build/libs/*.jar app.jar
+
+COPY --from=build /home/gradle/TransactionalService/build/libs/*.jar app.jar
+
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
