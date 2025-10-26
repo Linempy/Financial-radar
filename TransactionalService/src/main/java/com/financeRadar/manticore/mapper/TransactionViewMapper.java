@@ -3,6 +3,7 @@ package com.financeRadar.manticore.mapper;
 import com.financeRadar.manticore.dto.TransactionViewDto;
 import com.financeRadar.manticore.entity.Transaction;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +19,15 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public class TransactionViewMapper {
 
-    /**
-     * Преобразование Entity в ViewDto
-     */
     public TransactionViewDto toViewDto(Transaction transaction) {
         if (transaction == null) {
             return null;
         }
 
+        //todo ЗАХАРДКОЖЕНО
         return new TransactionViewDto(
                 transaction.getId(),
-                transaction.getCorrelationId(),
+                "1",
                 transaction.getAmount(),
                 transaction.getCurrency(),
                 transaction.getDescription(),

@@ -35,6 +35,8 @@ public class TransactionalCheckFraudConsumer {
         //TODO>>> ЛОГИИ
         log.info("RESULT. correlationId: {}, is_fraud: {}", event.getCorrelationId(), result.riskDecision().isFraud());
         //TODO поменять статус транзакции (см статусы)
+        // correlationId, isFraud, transactionId, ...
+        //
 
         log.info("{}", result.riskDecision());
     }

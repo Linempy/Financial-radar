@@ -83,3 +83,10 @@ retry:
     delay: 1000
     max-interval-ms: 10_000
 
+
+thread-pool:
+  async:
+    commit:
+      core-pool-size: 5
+      max-pool-size: 10
+      queue-capacity: 1000

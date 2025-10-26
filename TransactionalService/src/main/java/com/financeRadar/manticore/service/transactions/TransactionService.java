@@ -24,5 +24,5 @@ public interface TransactionService {
     /**
      * Получить транзакцию по ID для отображения в админ-панели
      */
-    TransactionViewDto getTransactionByIdForView(Long id);
+//    TransactionViewDto getTransactionByIdForView(Long id);
 }
