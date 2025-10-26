@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.controller;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
+import com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +25,7 @@ public class EmailTestController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<String> sendTestEmail(@RequestBody SuspiciousTransactionNotificationDto dto) {
+    public ResponseEntity<String> sendTestEmail(@RequestBody SuspiciousTransactionNotificationEvent dto) {
         emailServiceImpl.sendMail(dto);
         return ResponseEntity.ok("Письмо отправлено!");
     }

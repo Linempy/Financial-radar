@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.configuration.kafka;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
+import com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class KafkaConfig {
      * Топик для нотификаций
      */
     @Bean
-    public NewTopic sendNotification(@Value("notification_topic") String topic) {
+    public NewTopic sendNotification(@Value("spring.kafka.topics.notification.name") String topic) {
         return TopicBuilder.name(topic)
                 .partitions(notificationPartitionsCount)
                 .replicas(notificationReplicasCount)
@@ -59,11 +59,11 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, SuspiciousTransactionNotificationDto>
-        kafkaListenerContainerFactory(ConsumerFactory<String, SuspiciousTransactionNotificationDto> consumerFactory,
-        KafkaTemplate<String, SuspiciousTransactionNotificationDto> kafkaTemplate) {
+    public ConcurrentKafkaListenerContainerFactory<String, SuspiciousTransactionNotificationEvent>
+        kafkaListenerContainerFactory(ConsumerFactory<String, SuspiciousTransactionNotificationEvent> consumerFactory,
+        KafkaTemplate<String, SuspiciousTransactionNotificationEvent> kafkaTemplate) {
 
-        ConcurrentKafkaListenerContainerFactory<String, SuspiciousTransactionNotificationDto> factory =
+        ConcurrentKafkaListenerContainerFactory<String, SuspiciousTransactionNotificationEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory);

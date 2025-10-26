@@ -43,6 +43,7 @@ public interface TransactionMapper {
         return new TransactionRiskCheckEvent(
                 String.valueOf(dto.amount()),
                 dto.senderId().toString(),
+                dto.receiverId().toString(),
                 transactionId,
                 correlationId,
                 idempotencyKey,

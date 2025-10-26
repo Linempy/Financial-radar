@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
                 TransactionStatus.FRAUD_CHECKING.name(), dto.amount().doubleValue(), dto.currency());
 
         TransactionRiskCheckEvent event = mapper.toEvent(
-                dto, 
+                dto,
                 savedTransaction.getId().toString(),
                 correlationId,
                 context.idempotencyKey()

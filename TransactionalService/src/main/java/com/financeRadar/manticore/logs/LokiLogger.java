@@ -30,17 +30,16 @@ public class LokiLogger {
     public void logTransaction(String correlationId, String transactionId,
                                String stage, Object data) {
         try {
-            Map<String, Object> logEntry = Map.of(
-                    "stage", stage,
-                    "transactionId", transactionId != null ? transactionId : "null",
-                    "data", data,
-                    "timestamp", Instant.now().toString(),
-                    "service", "fraud-detection"
-            );
+            Map<String, Object> logEntry = new HashMap<>();
+            logEntry.put("stage", stage);
+            logEntry.put("transactionId", transactionId != null ? transactionId : "null");
+            logEntry.put("data", data);
+            logEntry.put("timestamp", Instant.now().toString());
+            logEntry.put("service", "fraud-detection");
 
             String jsonData = objectMapper.writeValueAsString(logEntry);
 
-            MDC.put("correlationId", transactionId);
+            MDC.put("correlationId", correlationId);
             MDC.put("stage", stage);
 
             mdcLogger.info(correlationId, jsonData);
@@ -59,10 +58,10 @@ public class LokiLogger {
      * Логирует получение Kafka ивента
      */
     public void logKafka(String correlationId, String transactionId) {
-        Map<String, Object> eventData = Map.of(
-                "action", "Ивент был отправлен",
-                "source", "kafka_consumer"
-        );
+        Map<String, Object> eventData = new HashMap<>();
+        eventData.put("action", "Ивент был отправлен");
+        eventData.put("source", "kafka_consumer");
+
 
         logTransaction(correlationId, transactionId, "KAFKA_EVENT_RECEIVED", eventData);
     }
@@ -73,12 +72,12 @@ public class LokiLogger {
     public void logTransactionStatusUpdate(String correlationId, String transactionId,
                                            TransactionStatus oldStatus, TransactionStatus newStatus,
                                            Boolean isFraud) {
-        Map<String, Object> statusData = Map.of(
-                "oldStatus", oldStatus != null ? oldStatus.name() : "null",
-                "newStatus", newStatus.name(),
-                "isFraud", isFraud,
-                "type", "status_update"
-        );
+        Map<String, Object> statusData = new HashMap<>();
+        statusData.put("oldStatus", oldStatus != null ? oldStatus.name() : "null");
+        statusData.put("newStatus", newStatus.name());
+        statusData.put("isFraud", isFraud);
+        statusData.put("type", "status_update");
+
 
         logTransaction(correlationId, transactionId, "TRANSACTION_STATUS_UPDATED", statusData);
     }
@@ -88,25 +87,25 @@ public class LokiLogger {
      */
     public void logProcessingError(String correlationId, String transactionId,
                                    Exception error, String stage) {
-        Map<String, Object> errorData = Map.of(
-                "errorMessage", error.getMessage(),
-                "exceptionType", error.getClass().getSimpleName(),
-                "stage", stage,
-                "type", "error"
-        );
+        Map<String, Object> errorData = new HashMap<>();
+        errorData.put("errorMessage", error != null ? error.getMessage() : "Unknown error");
+        errorData.put("exceptionType", error != null ? error.getClass().getSimpleName() : "Unknown");
+        errorData.put("stage", stage != null ? stage : "unknown");
+        errorData.put("type", "error");
+
 
         logTransaction(correlationId, transactionId, "PROCESSING_ERROR", errorData);
     }
 
     public void logTransactionSaved(String correlationId, String transactionId,
                                     String status, Double amount, String currency) {
-        logTransaction(correlationId, transactionId, "TRANSACTION_SAVED",
-                Map.of(
-                        "action", "transaction_saved",
-                        "status", status,
-                        "amount", amount,
-                        "currency", currency)
-        );
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "transaction_saved");
+        data.put("status", status);
+        data.put("amount", amount);
+        data.put("currency", currency);
+
+        logTransaction(correlationId, transactionId, "TRANSACTION_SAVED", data);
     }
 
     /**

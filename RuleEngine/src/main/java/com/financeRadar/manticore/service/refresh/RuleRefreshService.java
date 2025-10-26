@@ -7,7 +7,6 @@ import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,8 +41,7 @@ public class RuleRefreshService {
         return rulesAfterMapper;
     }
 
-    @Async("RuleExecutor")
-    public void refreshAllRulesAsync() {
+    public void refreshAllRules() {
         try {
             log.info("Начало обновления правил в кэше...");
 

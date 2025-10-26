@@ -105,12 +105,11 @@ public class LokiLogger {
     public void logTransactionStatusUpdate(String correlationId, String transactionId,
                                            TransactionStatus oldStatus, TransactionStatus newStatus,
                                            Boolean isFraud) {
-        Map<String, Object> statusData = Map.of(
-                "oldStatus", oldStatus != null ? oldStatus.name() : "null",
-                "newStatus", newStatus.name(),
-                "isFraud", isFraud,
-                "type", "status_update"
-        );
+        Map<String, Object> statusData = new HashMap<>();
+        statusData.put("oldStatus", oldStatus != null ? oldStatus.name() : "null");
+        statusData.put("newStatus", newStatus.name());
+        statusData.put("isFraud", isFraud);
+        statusData.put("type", "status_update");
 
         logTransaction(correlationId, transactionId, "TRANSACTION_STATUS_UPDATED", statusData);
     }

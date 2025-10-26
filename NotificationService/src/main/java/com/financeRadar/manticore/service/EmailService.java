@@ -1,6 +1,7 @@
 package com.financeRadar.manticore.service;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
+
+import com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent;
 
 /**
  * EmailService — Интерфейс для сервиса отправки email-уведомлений о подозрительных транзакциях.
@@ -12,7 +13,6 @@ public interface EmailService {
 
     /**
      * Отправляет mail с уведомлением, основанным на данных подозрительной транзакции
-     * @param suspiciousTransactionNotificationDto
      */
-    public void sendMail(SuspiciousTransactionNotificationDto suspiciousTransactionNotificationDto);
+    public void sendMail(SuspiciousTransactionNotificationEvent suspiciousTransactionNotificationEvent);
 }

@@ -1,6 +1,5 @@
 package com.financeRadar.manticore.service;
 
-import com.financeRadar.manticore.dto.SuspiciousTransactionNotificationDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
     private final TemplateEngine templateEngine;
 
     @Override
-    public void sendMail(SuspiciousTransactionNotificationDto dto) {
+    public void sendMail(com.financeRadar.manticore.dto.avro.SuspiciousTransactionNotificationEvent dto) {
         try {
             Context context = new Context();
             context.setVariable("message", dto);
@@ -35,8 +34,8 @@ public class EmailServiceImpl implements EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(dto.receiverEmail());
-            helper.setSubject(dto.subject());
+            helper.setTo(dto.getReceiverEmail());
+            helper.setSubject(dto.getSubject());
             helper.setText(body, true);
             helper.setFrom("Kir32kir@mail.ru");
 
