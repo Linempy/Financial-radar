@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.entity;
+package com.financeRadar.manticore.entity.rule;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

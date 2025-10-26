@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.service;
 
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import com.financeRadar.manticore.mapper.RuleMapper;
 import com.financeRadar.manticore.repository.RuleRepository;
 import com.financeRadar.manticore.repository.redis.RuleCacheRepository;

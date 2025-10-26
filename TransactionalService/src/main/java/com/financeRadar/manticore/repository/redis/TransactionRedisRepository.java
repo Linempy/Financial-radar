@@ -1,6 +1,5 @@
 package com.financeRadar.manticore.repository.redis;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeRadar.manticore.dto.TransactionStats;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * TransactionalRedisRepository — описание класса.
@@ -32,18 +30,9 @@ public class TransactionRedisRepository {
     @Value("${spring.data.redis.schema.idempotency-key.ttl-min}")
     private int defaultTtlMin;
 
-    private static final String IDEMPOTENCY = "idempotency:";
     private static final String TX_CONTEXT = "tx_context:";
 
     private final RedisTemplate<String, Object> redisTemplate;
-
-    public boolean addIfAbsent(String idempotencyKey) {
-        String key = getFormattedIdempotencyKey(idempotencyKey);
-
-        Boolean result = redisTemplate.opsForValue()
-                .setIfAbsent(key, "processed", Duration.ofMinutes(defaultTtlMin));
-        return Boolean.TRUE.equals(result);
-    }
 
     public TransactionStats recordTransaction(Long userId, BigDecimal amount) {
         String key = getFormattedTxKey(userId);
@@ -113,9 +102,6 @@ public class TransactionRedisRepository {
         return RedisScript.of(luaScript, List.class);
     }
 
-    private String getFormattedIdempotencyKey(String id) {
-        return IDEMPOTENCY + id;
-    }
 
     private String getFormattedTxKey(Long userId) {
         return TX_CONTEXT + userId;

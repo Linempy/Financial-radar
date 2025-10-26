@@ -1,6 +1,6 @@
 package com.financeRadar.manticore.dto.admin;
 
-import com.financeRadar.manticore.entity.RuleType;
+import com.financeRadar.manticore.entity.rule.RuleType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

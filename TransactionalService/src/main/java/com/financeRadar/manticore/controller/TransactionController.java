@@ -32,7 +32,9 @@ public class TransactionController {
             @RequestBody @Valid TransactionCreateDto dto,
             HttpServletRequest request) {
         validator.validate(dto);
-        RequestContext context = new RequestContext(request.getRemoteAddr(), request.getHeader("User-Agent"));
+        RequestContext context = new RequestContext(request.getRemoteAddr(),
+                request.getHeader("User-Agent"),
+                request.getHeader("Idempotency-Key"));
         service.createWithCheckRisk(dto, context);
         return ResponseEntity.ok().build();
     }

@@ -1,14 +1,13 @@
 package com.financeRadar.manticore.service.policy;
 
-import com.financeRadar.manticore.entity.RiskDecision;
-import com.financeRadar.manticore.entity.RiskLevel;
-import com.financeRadar.manticore.entity.RuleResult;
+import com.financeRadar.manticore.entity.rule.RiskDecision;
+import com.financeRadar.manticore.entity.rule.RiskLevel;
+import com.financeRadar.manticore.entity.rule.RuleResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SimpleCountPolicy — описание класса.

@@ -1,7 +1,7 @@
 package com.financeRadar.manticore.dto;
 
 import com.financeRadar.manticore.aop.ValidSpELExpression;
-import com.financeRadar.manticore.entity.RuleType;
+import com.financeRadar.manticore.entity.rule.RuleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

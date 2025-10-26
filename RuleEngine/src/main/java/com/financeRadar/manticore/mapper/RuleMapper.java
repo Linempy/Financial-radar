@@ -4,7 +4,7 @@ import com.financeRadar.manticore.dto.RuleCreateDto;
 import com.financeRadar.manticore.dto.RuleUpdateDto;
 import com.financeRadar.manticore.dto.RuleViewDto;
 import com.financeRadar.manticore.dto.redis.RuleRedisDto;
-import com.financeRadar.manticore.entity.Rule;
+import com.financeRadar.manticore.entity.rule.Rule;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;

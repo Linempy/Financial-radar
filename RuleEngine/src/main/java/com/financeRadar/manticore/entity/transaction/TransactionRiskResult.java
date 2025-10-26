@@ -1,5 +1,7 @@
-package com.financeRadar.manticore.entity;
+package com.financeRadar.manticore.entity.transaction;
 
+import com.financeRadar.manticore.entity.rule.RiskDecision;
+import com.financeRadar.manticore.entity.rule.RuleResult;
 import lombok.Builder;
 
 import java.time.Instant;

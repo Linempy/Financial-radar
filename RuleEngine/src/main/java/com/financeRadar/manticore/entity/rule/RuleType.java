@@ -1,4 +1,4 @@
-package com.financeRadar.manticore.entity;
+package com.financeRadar.manticore.entity.rule;
 
 /**
  * Перечисления представляющее собой типы правил для проверки на подозрительность транзакции
