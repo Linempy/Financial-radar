@@ -36,7 +36,7 @@ public class RuleServiceImpl implements RuleService {
         Rule savedRule = ruleRepository.save(rule);
         log.info("Правило \"{}\" было создано", rule.getName());
 
-        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRules);
         return savedRule.getId().toString();
     }
 
@@ -55,7 +55,7 @@ public class RuleServiceImpl implements RuleService {
         Rule savedRule = ruleRepository.save(rule);
         log.info("Правило \"{}\" было обновлено", rule.getName());
 
-        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRules);
         return mapper.toDto(savedRule);
     }
 
@@ -65,7 +65,7 @@ public class RuleServiceImpl implements RuleService {
         Rule rule = ruleRepository.findByIdOrThrow(id);
         ruleRepository.deleteById(id);
         log.info("Правило \"{}\" было удалено", rule.getName());
-        afterCommitManager.executeAfterCommit(refreshService::refreshAllRulesAsync);
+        afterCommitManager.executeAfterCommit(refreshService::refreshAllRules);
     }
 
 

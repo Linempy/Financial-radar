@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   mail:
@@ -41,3 +41,9 @@ spring:
         value-serializer: org.apache.kafka.common.serialization.StringSerializer
       listener:
         missing-topics-fatal: false
+
+telegram:
+  bot:
+    token: 8360417760:AAGxME60GdtiHDoOgHEi9WM260zabNfUoyE
+    name: TransactionAlertBot
+    group-id: -4891092304

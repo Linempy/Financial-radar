@@ -48,4 +48,9 @@ dependencies {
      * Шаблонизатор писем (Thymeleaf)
      */
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    /**
+     * Telegram bot
+     */
+    implementation("org.telegram:telegrambots:6.9.7.1")
 }

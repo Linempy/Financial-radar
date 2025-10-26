@@ -31,6 +31,7 @@ public class LokiLogger {
                                String stage, Object data) {
         try {
             Map<String, Object> logEntry = Map.of(
+                    "correlationId", correlationId,
                     "stage", stage,
                     "transactionId", transactionId != null ? transactionId : "null",
                     "data", data,
@@ -40,7 +41,7 @@ public class LokiLogger {
 
             String jsonData = objectMapper.writeValueAsString(logEntry);
 
-            MDC.put("correlationId", transactionId);
+            MDC.put("correlationId", correlationId);
             MDC.put("stage", stage);
 
             mdcLogger.info(correlationId, jsonData);
@@ -60,6 +61,7 @@ public class LokiLogger {
      */
     public void logKafka(String correlationId, String transactionId) {
         Map<String, Object> eventData = Map.of(
+                "correlationId", correlationId,
                 "action", "Ивент был отправлен",
                 "source", "kafka_consumer"
         );
@@ -74,6 +76,7 @@ public class LokiLogger {
                                            TransactionStatus oldStatus, TransactionStatus newStatus,
                                            Boolean isFraud) {
         Map<String, Object> statusData = Map.of(
+                "correlationId", correlationId,
                 "oldStatus", oldStatus != null ? oldStatus.name() : "null",
                 "newStatus", newStatus.name(),
                 "isFraud", isFraud,
@@ -89,6 +92,7 @@ public class LokiLogger {
     public void logProcessingError(String correlationId, String transactionId,
                                    Exception error, String stage) {
         Map<String, Object> errorData = Map.of(
+                "correlationId", correlationId,
                 "errorMessage", error.getMessage(),
                 "exceptionType", error.getClass().getSimpleName(),
                 "stage", stage,
@@ -102,6 +106,7 @@ public class LokiLogger {
                                     String status, Double amount, String currency) {
         logTransaction(correlationId, transactionId, "TRANSACTION_SAVED",
                 Map.of(
+                        "correlationId", correlationId,
                         "action", "transaction_saved",
                         "status", status,
                         "amount", amount,
@@ -114,6 +119,7 @@ public class LokiLogger {
      */
     public void logCorrelationAssigned(String correlationId, boolean isNew, String source) {
         Map<String, Object> data = new HashMap<>();
+        data.put("correlationId", correlationId);
         data.put("action", "correlation_id_assigned");
         data.put("isNew", isNew);
         data.put("source", source);
